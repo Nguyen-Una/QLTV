@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Library University</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Be Vietnam Pro', sans-serif; background: #f0f6fb; color: #1a1a2e; }
+
+    /* NAV */
+    nav {
+      background: #d6eaf8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 60px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: #1a1a2e;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 30px; height: 30px; fill: #fff; }
+    .logo-text { line-height: 1.2; }
+    .logo-text strong { display: block; font-size: 15px; font-weight: 800; letter-spacing: 1px; color: #1a1a2e; }
+    .logo-text span { font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #1a1a2e; }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-size: 15px; font-weight: 500; color: #333;
+      padding-bottom: 2px;
+    }
+    .nav-links a.active {
+      font-weight: 700; color: #1a1a2e;
+      border-bottom: 2.5px solid #1a1a2e;
+    }
+    .btn-login {
+      padding: 9px 24px; border: 2px solid #1a1a2e; border-radius: 8px;
+      background: #fff; font-family: inherit; font-weight: 600; font-size: 14px;
+      cursor: pointer; color: #1a1a2e; transition: all .2s;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .btn-login:hover { background: #1a1a2e; color: #fff; }
+
+    .nav-user-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer;
+      padding: 6px 8px; border-radius: 8px;
+      transition: background .15s;
+    }
+    .nav-user-btn:hover { background: rgba(58,154,217,0.10); }
+    .nav-user-btn .user-icon {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #fff; border: 2px solid #3a9ad9;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .nav-user-btn .user-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .nav-user-btn .user-icon svg { width: 20px; height: 20px; }
+    .nav-user-btn .chevron {
+      font-size: 10px; color: #555; transition: transform .2s;
+    }
+    .nav-user-btn.open .chevron { transform: rotate(180deg); }
+
+    /* Dropdown */
+    .user-dropdown {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: #fff; border-radius: 10px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+      min-width: 190px; z-index: 300;
+      overflow: hidden; display: none;
+      border: 1px solid #e8f0f7;
+    }
+    .user-dropdown.show { display: block; animation: dropIn .18s ease; }
+    @keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .dropdown-header {
+      padding: 11px 16px 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: #999; border-bottom: 1px solid #f0f6fb;
+    }
+    .dropdown-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; font-size: 14px; font-weight: 500; color: #333;
+      text-decoration: none; cursor: pointer; transition: background .15s;
+    }
+    .dropdown-item:hover { background: #f0f6fb; color: #3a9ad9; }
+    .dropdown-item.active { color: #3a9ad9; font-weight: 700; }
+    .dropdown-item .di-icon { font-size: 15px; }
+    .dropdown-divider { border: none; border-top: 1px solid #f0f6fb; margin: 2px 0; }
+    .dropdown-item.logout { color: #e74c3c; }
+    .dropdown-item.logout:hover { background: #fff5f5; }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      margin: 24px 60px 0;
+      border-radius: 16px;
+      overflow: hidden;
+      height: 220px;
+      background: linear-gradient(135deg, #d4e9f7 0%, #b8d9f0 100%);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 1;
+    }
+    .hero-bg {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      position: absolute; inset: 0;
+      opacity: 0.75;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100%; gap: 18px;
+      padding: 0 20px;
+    }
+    .hero h1 {
+      font-size: 26px; font-weight: 800;
+      color: #fff; letter-spacing: 1px;
+      text-transform: uppercase; text-align: center;
+      text-shadow: 0 4px 14px rgba(0,0,0,0.55);
+    }
+    .search-bar {
+      display: flex; align-items: center;
+      background: #fff; border-radius: 10px;
+      overflow: hidden; width: 100%; max-width: 680px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.13);
+    }
+    .search-select {
+      padding: 0 14px; height: 50px;
+      border: none; outline: none;
+      background: #f5f5f5; font-family: inherit;
+      font-size: 14px; font-weight: 500; color: #333;
+      border-right: 1px solid #ddd;
+      cursor: pointer; appearance: none;
+      -webkit-appearance: none;
+      padding-right: 28px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    .search-input {
+      flex: 1; height: 50px; border: none; outline: none;
+      padding: 0 18px; font-family: inherit;
+      font-size: 15px; color: #555;
+    }
+    .search-btn {
+      width: 56px; height: 50px;
+      background: #3a9ad9; border: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .search-btn:hover { background: #2b7eb8; }
+    .search-btn svg { width: 20px; height: 20px; fill: #fff; }
+
+    /* SECTIONS */
+    .section { margin: 32px 60px 0; }
+    .section-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 18px;
+    }
+    .section-title {
+      font-size: 17px; font-weight: 800;
+      text-transform: uppercase; color: #1a1a2e;
+      letter-spacing: 0.5px;
+    }
+    .see-more {
+      font-size: 13px; font-weight: 600;
+      color: #1a1a2e; text-decoration: none;
+      display: flex; align-items: center; gap: 4px;
+      border-bottom: 1px solid #1a1a2e;
+    }
+    .see-more:hover { color: #3a9ad9; border-color: #3a9ad9; }
+
+    /* BOOK GRID */
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+      justify-items: center;
+    }
+    .book-grid.row {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 40px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    .book-grid.row .book-card {
+      flex: 0 0 auto;
+    }
+    .book-card {
+      width: 220px;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .book-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+    .book-cover {
+      width: 100%; height: 320px;
+      object-fit: contain;
+      display: block;
+      background: #e8f0f7;
+      transition: transform .2s;
+    }
+    .book-cover.zoom {
+      object-fit: cover;
+      transform: scale(1.05);
+    }
+    .book-cover-placeholder {
+      width: 100%; height: 240px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #999; text-align: center;
+      background: linear-gradient(135deg, #e8f0f7, #c8dcea);
+      padding: 10px;
+    }
+    .book-info {
+      padding: 10px 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 64px;
+    }
+    .book-title {
+      font-size: 12.5px; font-weight: 600; color: #1a1a2e;
+      margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .book-author {
+      font-size: 11.5px; color: #666; margin-bottom: 10px;
+      white-space: normal; overflow: visible; text-overflow: unset;
+    }
+    .btn-detail {
+      display: block; width: 100%;
+      padding: 7px 0; background: #3a9ad9;
+      border: none; border-radius: 7px;
+      color: #fff; font-family: inherit; font-size: 12px;
+      font-weight: 700; letter-spacing: 0.5px;
+      cursor: pointer; text-align: center;
+      text-transform: uppercase; transition: background .2s, transform .2s;
+      text-decoration: none;
+    }
+    .btn-detail:hover {
+      background: #1a1a2e;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: 40px;
+      background: #d6eaf8;
+      padding: 36px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+      justify-items: stretch;
+    }
+    .footer-col h3 {
+      font-size: 14px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      color: #1a1a2e; margin-bottom: 14px;
+    }
+    .footer-col p, .footer-col td, .footer-col th {
+      font-size: 13px; color: #333; line-height: 1.8;
+      white-space: nowrap;
+    }
+    .footer-table { border-collapse: collapse; }
+    .footer-table td:first-child { font-weight: 600; padding-right: 12px; color: #1a1a2e; width: 80px; }
+    .hours-table { border-collapse: collapse; }
+    .hours-table td { padding: 1px 0; font-size: 13px; color: #333; }
+    .social-icons { display: flex; gap: 16px; margin-top: 6px; align-items: center; }
+    .social-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px; background: #1a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; text-decoration: none; transition: opacity .2s;
+    }
+    .social-icon:hover { opacity: 0.75; }
+    .social-icon svg { width: 22px; height: 22px; fill: #fff; }
+    .qr-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px; border: 2.5px solid #1a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .qr-icon svg { width: 24px; height: 24px; fill: #1a1a2e; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6h24v18H4zM10 6V4h12v2M8 10h16M8 14h16M8 18h10" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M16 2 L20 6 L12 6 Z" fill="#fff"/>
+        <path d="M13 6 L13 26 M19 6 L19 26" stroke="#fff" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <strong>LIBRARY</strong>
+      <span>UNIVERSITY</span>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Trang chủ</a></li>
+    <li><a href="huongdan.html">Hướng dẫn</a></li>
+    <li><a href="gioithieu.html">Giới thiệu</a></li>
+  </ul>
+  <a href="dangnhap.html" class="btn-login" id="login-link" style="display:none;">Đăng nhập</a>
+
+  <div id="profile-block" style="position:relative; display:none;">
+    <button class="nav-user-btn" id="nav-user-btn" onclick="toggleDropdown()">
+      <div class="user-icon" id="nav-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#3a9ad9" stroke-width="1.8">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+      </div>
+      <span class="chevron">▼</span>
+    </button>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="dropdown-header">Hồ sơ cá nhân</div>
+      <a href="canhan.html" class="dropdown-item">
+        <span class="di-icon">☆</span> Thông tin cá nhân
+      </a>
+      <a href="giasach.html" class="dropdown-item">
+        <span class="di-icon">☆</span> Giá sách của tôi
+      </a>
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item logout" onclick="doLogout()">
+        <span class="di-icon">🚪</span> Đăng xuất
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <!-- Banner image -->
+  <img class="hero-bg" src="image/banner.jpg" alt="Banner" />
+  <div class="hero-content">
+    <h1>Chào mừng bạn đến với thư viện !</h1>
+    <div class="search-bar">
+      <div style="position:relative;height:50px;">
+        <select class="search-select" id="searchSelect" onchange="onFilterChange(this.value)">
+          <option value="all">Tất cả</option>
+          <option value="title">Tên sách</option>
+          <option value="author">Tác giả</option>
+          <option value="genre">Thể loại</option>
+        </select>
+        <div id="genrePanel" style="display:none;position:fixed;background:#fff;border-radius:10px;min-width:210px;box-shadow:0 8px 28px rgba(0,0,0,0.18);z-index:9999;border:1px solid #e0eaf4;overflow:hidden;font-family:'Be Vietnam Pro',sans-serif;">
+          <div onclick="pickGenre('Giáo trình')" style="padding:11px 18px;font-size:14px;font-weight:500;cursor:pointer;color:#1a1a2e;" onmouseover="this.style.background='#3a9ad9';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#1a1a2e'">Giáo trình</div>
+          <div onclick="pickGenre('Sách tham khảo')" style="padding:11px 18px;font-size:14px;font-weight:500;cursor:pointer;color:#1a1a2e;" onmouseover="this.style.background='#3a9ad9';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#1a1a2e'">Sách tham khảo</div>
+          <div onclick="pickGenre('Tài liệu ôn thi')" style="padding:11px 18px;font-size:14px;font-weight:500;cursor:pointer;color:#1a1a2e;" onmouseover="this.style.background='#3a9ad9';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#1a1a2e'">Tài liệu ôn thi</div>
+          <div onclick="pickGenre('Nghiên cứu khoa học')" style="padding:11px 18px;font-size:14px;font-weight:500;cursor:pointer;color:#1a1a2e;" onmouseover="this.style.background='#3a9ad9';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#1a1a2e'">Nghiên cứu khoa học</div>
+          <div onclick="pickGenre('Sách bài tập')" style="padding:11px 18px;font-size:14px;font-weight:500;cursor:pointer;color:#1a1a2e;" onmouseover="this.style.background='#3a9ad9';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#1a1a2e'">Sách bài tập</div>
+          <div onclick="pickGenre('Khác')" style="padding:11px 18px;font-size:14px;font-weight:500;cursor:pointer;color:#1a1a2e;" onmouseover="this.style.background='#3a9ad9';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#1a1a2e'">Khác</div>
+        </div>
+      </div>
+      <input type="text" class="search-input" id="searchInput" placeholder="Tra cứu sách" />
+      <button class="search-btn" id="searchBtn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH RESULTS -->
+<div id="searchResultsSection" class="section" style="display:none;">
+  <div class="section-header">
+    <span class="section-title" id="searchResultsTitle"></span>
+  </div>
+  <div class="book-grid row" id="searchResultsGrid"></div>
+</div>
+
+<!-- MOST BORROWED -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Sách được mượn nhiều nhất</span>
+  </div>
+  <div class="book-grid row">
+    <!-- Book 1 -->
+    <div class="book-card">
+      <img class="book-cover" src="image/luật kinh tế.jpg" alt="Luật Kinh tế" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=luat-kinh-te" data-book-id="luat-kinh-te">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 2 -->
+    <div class="book-card">
+      <img class="book-cover" src="image/từ điển kinh tế học.jpg" alt="Từ điển Kinh tế học" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=tu-dien-kinh-te" data-book-id="tu-dien-kinh-te">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 3 -->
+    <div class="book-card">
+      <img class="book-cover" src="image/nền kinh tế tự do.jpg" alt="Nền Kinh tế tự do" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=nen-kinh-te-tu-do" data-book-id="nen-kinh-te-tu-do">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 4 -->
+    <div class="book-card">
+      <img class="book-cover" src="image/cách nền kinh tế vận hành.jpg" alt="Cách Nền Kinh Tế Vận Hành" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=cach-nen-kinh-te-van-hanh" data-book-id="cach-nen-kinh-te-van-hanh">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 5 -->
+    <div class="book-card">
+      <img class="book-cover zoom" src="image/Marketing 5.0.jpg" alt="Marketing 5.0" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=marketing-5-0" data-book-id="marketing-5-0">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 6 -->
+    <div class="book-card">
+      <img class="book-cover zoom" src="image/quản trị marketing.jpg" alt="Quản trị Marketing" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=quan-tri-marketing" data-book-id="quan-tri-marketing">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 7 -->
+    <div class="book-card">
+      <img class="book-cover" src="image/kinh tế vĩ mô.jpg" alt="Kinh tế Vĩ mô" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=kinh-te-vi-mo" data-book-id="kinh-te-vi-mo">Chi tiết</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEWLY UPDATED -->
+<div class="section" style="margin-bottom: 0;">
+  <div class="section-header">
+    <span class="section-title">Sách mới cập nhật</span>
+  </div>
+  <div class="book-grid row">
+    <!-- Book 1 -->
+    <div class="book-card">
+      <img class="book-cover" src="image/gt tử tưởng HCM.jpg" alt="Giáo trình Tư tưởng Hồ Chí Minh" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=tu-tuong-ho-chi-minh" data-book-id="tu-tuong-ho-chi-minh">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 2 -->
+    <div class="book-card">
+      <img class="book-cover zoom" src="image/Đại học khởi nghiệp.jpg" alt="Đại học Khởi nghiệp" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=dai-hoc-khoi-nghiep" data-book-id="dai-hoc-khoi-nghiep">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 3 -->
+    <div class="book-card">
+      <img class="book-cover zoom" src="image/những cấm kỵ.jpg" alt="Những Cấm Kị" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=nhung-cam-ky" data-book-id="nhung-cam-ky">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 4 -->
+    <div class="book-card">
+      <img class="book-cover" src="image/tinh hoa kinh tế học.jpg" alt="Tinh Hoa Kinh Tế Học" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=tinh-hoa-kinh-te-hoc" data-book-id="tinh-hoa-kinh-te-hoc">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 5 -->
+    <div class="book-card">
+      <img class="book-cover" src="image/gt LSD.jpg" alt="Lịch sử Đảng" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=lich-su-dang" data-book-id="lich-su-dang">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 6 -->
+    <div class="book-card">
+      <img class="book-cover zoom" src="image/nguyên lý tiếp thị.jpg" alt="Nguyên lý tiếp thị" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=nguyen-ly-tiep-thi" data-book-id="nguyen-ly-tiep-thi">Chi tiết</a>
+      </div>
+    </div>
+    <!-- Book 7 -->
+    <div class="book-card">
+      <img class="book-cover" src="image/đối mặt tư bản.jpg" alt="Đối mặt tư bản" />
+      <div class="book-info">
+        <a class="btn-detail" href="chitiet.html?id=doi-mat-tu-ban" data-book-id="doi-mat-tu-ban">Chi tiết</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-col">
+    <h3>Liên hệ</h3>
+    <table class="footer-table">
+      <tr><td>Địa chỉ:</td><td>Hồ Tùng Mậu, Từ Liêm, Hà Nội, Việt Nam</td></tr>
+      <tr><td>Điện thoại:</td><td>(84)24.12.345.678</td></tr>
+      <tr><td>Email:</td><td>libuniversity@gmail.com</td></tr>
+    </table>
+  </div>
+  <div class="footer-col">
+    <h3>Thời gian hoạt động</h3>
+    <table class="hours-table">
+      <tr><td>Thứ 2 - Thứ 6: 8:00 – 21:00</td></tr>
+      <tr><td>Thứ 7: 9:00 – 17:00</td></tr>
+      <tr><td>Chủ nhật: Đóng cửa</td></tr>
+    </table>
+  </div>
+  <div class="footer-col">
+    <h3>Kết nối với chúng tôi</h3>
+    <div class="social-icons">
+      <!-- QR -->
+      <div class="qr-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="5" y="5" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="14" y="3" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="16" y="5" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="3" y="14" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="5" y="16" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="14" y="14" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="17" y="14" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="14" y="17" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="17" y="17" width="4" height="4" fill="#1a1a2e"/>
+        </svg>
+      </div>
+      <!-- Facebook -->
+      <a href="#" class="social-icon" style="background:#1877f2;">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="#fff"/>
+        </svg>
+      </a>
+      <!-- YouTube -->
+      <a href="#" class="social-icon" style="background:#ff0000;">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" fill="#fff"/>
+          <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#ff0000"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="books.js"></script>
+<script>
+  // Toggle dropdown for profile menu
+  function toggleDropdown() {
+    var dd = document.getElementById('user-dropdown');
+    var btn = document.getElementById('nav-user-btn');
+    if (!dd || !btn) return;
+    dd.classList.toggle('show');
+    btn.classList.toggle('open');
+  }
+
+  document.addEventListener('click', function(e) {
+    var btn = document.getElementById('nav-user-btn');
+    var dd  = document.getElementById('user-dropdown');
+    if (!btn || !dd) return;
+    if (!btn.contains(e.target) && !dd.contains(e.target)) {
+      dd.classList.remove('show');
+      btn.classList.remove('open');
+    }
+  });
+
+  function doLogout() {
+    sessionStorage.removeItem('lib_user');
+    localStorage.removeItem('lib_user_remember');
+    window.location.href = 'index.html';
+  }
+
+  // Show profile block when logged in
+  (function() {
+    var user = JSON.parse(sessionStorage.getItem('lib_user') || 'null');
+    var profileBlock = document.getElementById('profile-block');
+    var loginLink = document.getElementById('login-link');
+    if (user) {
+      if (profileBlock) profileBlock.style.display = 'inline-flex';
+      if (loginLink) loginLink.style.display = 'none';
+
+      if (user.avatar) {
+        var avatar = document.getElementById('nav-avatar');
+        if (avatar) {
+          avatar.innerHTML = '<img src="' + user.avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
+        }
+      }
+    } else {
+      if (profileBlock) profileBlock.style.display = 'none';
+      if (loginLink) loginLink.style.display = 'inline-flex';
+    }
+  })();
+
+  // Search/filter behavior
+  (function() {
+    var searchBtn = document.getElementById('searchBtn');
+    var searchInput = document.getElementById('searchInput');
+    var searchSelect = document.getElementById('searchSelect');
+    var resultsSection = document.getElementById('searchResultsSection');
+    var resultsTitle = document.getElementById('searchResultsTitle');
+    var resultsGrid = document.getElementById('searchResultsGrid');
+    var allSections = Array.from(document.querySelectorAll('.section'));
+    var defaultSections = allSections.filter(sec => sec.id !== 'searchResultsSection');
+
+    function renderBookCard(id) {
+      var book = books[id];
+      if (!book) return '';
+      return `
+        <div class="book-card">
+          <img class="book-cover" src="${book.image}" alt="${book.title}" />
+          <div class="book-info">
+            <a class="btn-detail" href="chitiet.html?id=${id}" data-book-id="${id}">Chi tiết</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function norm(s) {
+      return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
+    function showSearchResults(query, filter) {
+      var nq = norm(query);
+      if (!nq) {
+        alert('Vui lòng nhập từ khóa muốn tìm.');
+        return;
+      }
+
+      var matched = Object.keys(books).filter(function(id) {
+        var book = books[id];
+        if (filter === 'title')  return norm(book.title).includes(nq);
+        if (filter === 'author') return norm(book.author).includes(nq) || norm(book.publisher).includes(nq);
+        if (filter === 'genre')  return norm(book.type).includes(nq);
+        return (norm(book.title) + ' ' + norm(book.author) + ' ' + norm(book.publisher) + ' ' + norm(book.type)).includes(nq);
+      });
+
+      defaultSections.forEach(function(sec) { sec.style.display = 'none'; });
+      resultsSection.style.display = 'block';
+
+      if (matched.length === 0) {
+        resultsTitle.textContent = `Không tìm thấy kết quả cho "${query}"`;
+        resultsGrid.innerHTML = '<div style="padding:24px; width:100%; text-align:center; color:#555;">Không tìm thấy sách phù hợp.</div>';
+        return;
+      }
+
+      resultsTitle.textContent = `Kết quả tìm kiếm: "${query}"`;
+      resultsGrid.innerHTML = matched.map(renderBookCard).join('');
+    }
+
+    function resetSearchResults() {
+      resultsSection.style.display = 'none';
+      defaultSections.forEach(function(sec) { sec.style.display = 'block'; });
+      resultsTitle.textContent = '';
+      resultsGrid.innerHTML = '';
+    }
+
+    searchBtn.addEventListener('click', function() {
+      showSearchResults(searchInput.value, searchSelect.value);
+    });
+
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        showSearchResults(searchInput.value, searchSelect.value);
+      }
+    });
+
+    searchInput.addEventListener('input', function() {
+      if (searchInput.value.trim() === '') {
+        resetSearchResults();
+      }
+    });
+
+    // doSearch: luôn redirect sang timkiem.html
+    function doSearch() {
+      var q = searchInput.value.trim();
+      var f = searchSelect.value;
+      if (!q) { alert('Vui lòng nhập từ khóa muốn tìm.'); return; }
+      window.location.href = 'timkiem.html?q=' + encodeURIComponent(q) + '&filter=' + encodeURIComponent(f);
+    }
+    searchBtn.removeEventListener('click', arguments.callee);
+    searchBtn.addEventListener('click', doSearch);
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') doSearch();
+    });
+
+  })();
+
+  // ── Genre dropdown ──
+  function onFilterChange(val) {
+    var panel = document.getElementById('genrePanel');
+    if (val === 'genre') {
+      var rect = document.getElementById('searchSelect').getBoundingClientRect();
+      panel.style.top  = (rect.bottom + 6) + 'px';
+      panel.style.left = rect.left + 'px';
+      panel.style.display = 'block';
+    } else {
+      panel.style.display = 'none';
+    }
+  }
+  function pickGenre(name) {
+    document.getElementById('searchInput').value = name;
+    document.getElementById('genrePanel').style.display = 'none';
+  }
+  document.addEventListener('click', function(e) {
+    var panel = document.getElementById('genrePanel');
+    var sel   = document.getElementById('searchSelect');
+    if (panel && sel && !panel.contains(e.target) && e.target !== sel) {
+      panel.style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>

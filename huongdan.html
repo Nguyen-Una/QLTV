@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hướng dẫn sử dụng – Library University</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Be Vietnam Pro', sans-serif; background: #f0f6fb; color: #1a1a2e; }
+
+    /* NAV */
+    nav {
+      background: #d6eaf8;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 60px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon {
+      width: 48px; height: 48px; background: #1a1a2e; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo-text { line-height: 1.2; }
+    .logo-text strong { display: block; font-size: 15px; font-weight: 800; letter-spacing: 1px; color: #1a1a2e; }
+    .logo-text span { font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #1a1a2e; }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 15px; font-weight: 500; color: #333; padding-bottom: 2px; transition: color .2s; }
+    .nav-links a:hover { color: #3a9ad9; }
+    .nav-links a.active { font-weight: 700; color: #1a1a2e; border-bottom: 2.5px solid #1a1a2e; }
+    .btn-login {
+      padding: 9px 24px; border: 2px solid #1a1a2e; border-radius: 8px;
+      background: #fff; font-family: inherit; font-weight: 600; font-size: 14px;
+      cursor: pointer; color: #1a1a2e; transition: all .2s;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .btn-login:hover { background: #1a1a2e; color: #fff; }
+
+    .nav-user-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer;
+      padding: 6px 8px; border-radius: 8px;
+      transition: background .15s;
+    }
+    .nav-user-btn:hover { background: rgba(58,154,217,0.10); }
+    .nav-user-btn .user-icon {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #fff; border: 2px solid #3a9ad9;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .nav-user-btn .user-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .nav-user-btn .user-icon svg { width: 20px; height: 20px; }
+    .nav-user-btn .chevron {
+      font-size: 10px; color: #555; transition: transform .2s;
+    }
+    .nav-user-btn.open .chevron { transform: rotate(180deg); }
+
+    /* Dropdown */
+    .user-dropdown {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: #fff; border-radius: 10px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+      min-width: 190px; z-index: 300;
+      overflow: hidden; display: none;
+      border: 1px solid #e8f0f7;
+    }
+    .user-dropdown.show { display: block; animation: dropIn .18s ease; }
+    @keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .dropdown-header {
+      padding: 11px 16px 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: #999; border-bottom: 1px solid #f0f6fb;
+    }
+    .dropdown-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; font-size: 14px; font-weight: 500; color: #333;
+      text-decoration: none; cursor: pointer; transition: background .15s;
+    }
+    .dropdown-item:hover { background: #f0f6fb; color: #3a9ad9; }
+    .dropdown-item.active { color: #3a9ad9; font-weight: 700; }
+    .dropdown-item .di-icon { font-size: 15px; }
+    .dropdown-divider { border: none; border-top: 1px solid #f0f6fb; margin: 2px 0; }
+    .dropdown-item.logout { color: #e74c3c; }
+    .dropdown-item.logout:hover { background: #fff5f5; }
+
+    /* PAGE HERO */
+    .page-hero {
+      background: linear-gradient(135deg, #0d3b2e 0%, #155a40 55%, #1abc9c 100%);
+      padding: 64px 60px;
+      position: relative; overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .page-hero-inner { position: relative; z-index: 1; max-width: 700px; animation: fadeUp .6s ease both; }
+    .page-hero .breadcrumb {
+      font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .page-hero .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; }
+    .page-hero .breadcrumb a:hover { color: #fff; }
+    .page-hero .breadcrumb span { opacity: 0.5; }
+    .page-hero h1 { font-size: 36px; font-weight: 800; color: #fff; line-height: 1.25; letter-spacing: 0.5px; margin-bottom: 16px; }
+    .page-hero p { font-size: 16px; color: rgba(255,255,255,0.82); line-height: 1.7; max-width: 580px; }
+
+    /* QUICK NAV */
+    .quick-nav {
+      background: #fff; border-bottom: 1.5px solid #e4eff7;
+      padding: 0 60px; position: sticky; top: 76px; z-index: 90;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .quick-nav ul {
+      display: flex; gap: 0; list-style: none; overflow-x: auto;
+    }
+    .quick-nav a {
+      display: block; padding: 16px 22px;
+      font-size: 14px; font-weight: 600; color: #555;
+      text-decoration: none; white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    .quick-nav a:hover, .quick-nav a.active {
+      color: #3a9ad9; border-bottom-color: #3a9ad9;
+    }
+
+    /* MAIN */
+    .main { max-width: 1100px; margin: 0 auto; padding: 52px 60px 72px; }
+
+    /* SECTION */
+    .guide-section { margin-bottom: 72px; scroll-margin-top: 140px; }
+    .sec-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #3a9ad9; margin-bottom: 10px;
+    }
+    .sec-label::before { content:''; display:block; width:24px; height:2px; background:#3a9ad9; border-radius:2px; }
+    .sec-title { font-size: 24px; font-weight: 800; color: #1a1a2e; margin-bottom: 28px; line-height: 1.3; }
+
+    /* STEP CARDS */
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .step-card {
+      background: #fff; border-radius: 16px; padding: 26px 22px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .step-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(58,154,217,0.12); }
+    .step-number {
+      position: absolute; top: -14px; left: 22px;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: #3a9ad9; color: #fff;
+      font-size: 13px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(58,154,217,0.4);
+    }
+    .step-icon { font-size: 32px; margin-bottom: 14px; margin-top: 8px; }
+    .step-card h4 { font-size: 14px; font-weight: 800; color: #1a1a2e; margin-bottom: 8px; }
+    .step-card p { font-size: 13px; color: #555; line-height: 1.7; }
+
+    /* INFO BOX */
+    .info-box {
+      background: linear-gradient(135deg, #e8f4fd, #d6eaf8);
+      border-left: 4px solid #3a9ad9; border-radius: 0 12px 12px 0;
+      padding: 18px 22px; margin: 24px 0;
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .info-box .icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .info-box p { font-size: 14px; color: #1a1a2e; line-height: 1.7; }
+    .info-box strong { color: #3a9ad9; }
+
+    .warn-box {
+      background: #fffbeb; border-left: 4px solid #f59e0b;
+      border-radius: 0 12px 12px 0; padding: 18px 22px; margin: 24px 0;
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .warn-box .icon { font-size: 20px; flex-shrink: 0; }
+    .warn-box p { font-size: 14px; color: #92400e; line-height: 1.7; }
+
+    /* RULE TABLE */
+    .rule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    .rule-card {
+      background: #fff; border-radius: 14px; padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .rule-card h4 {
+      font-size: 14px; font-weight: 800; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .rule-card ul { list-style: none; }
+    .rule-card ul li {
+      font-size: 13.5px; color: #444; line-height: 1.7;
+      padding: 5px 0; border-bottom: 1px solid #f0f6fb;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .rule-card ul li:last-child { border-bottom: none; }
+    .rule-card ul li::before { content: attr(data-icon); flex-shrink: 0; }
+
+    /* BORROW TABLE */
+    .borrow-table {
+      width: 100%; border-collapse: collapse;
+      background: #fff; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px;
+    }
+    .borrow-table th {
+      background: #1a2a4a; color: #fff;
+      padding: 14px 18px; text-align: left;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.3px;
+    }
+    .borrow-table td {
+      padding: 13px 18px; font-size: 13.5px; color: #333;
+      border-bottom: 1px solid #f0f6fb; vertical-align: middle;
+    }
+    .borrow-table tr:last-child td { border-bottom: none; }
+    .borrow-table tr:hover td { background: #f8fbfe; }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 700;
+    }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-green { background: #dcfce7; color: #15803d; }
+    .badge-orange { background: #fef3c7; color: #b45309; }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 12px; }
+    .faq-item {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%; padding: 18px 22px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; font-size: 14.5px; font-weight: 700; color: #1a1a2e;
+      text-align: left; gap: 16px; transition: background .15s;
+    }
+    .faq-q:hover { background: #f8fbfe; }
+    .faq-arrow {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #e8f4fd; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .3s, background .2s;
+    }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); background: #3a9ad9; }
+    .faq-item.open .faq-arrow svg { stroke: #fff; }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s ease, padding .3s;
+      padding: 0 22px;
+    }
+    .faq-item.open .faq-a { max-height: 300px; padding: 0 22px 18px; }
+    .faq-a p { font-size: 14px; color: #555; line-height: 1.75; }
+
+    /* CONTACT CARD */
+    .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .contact-card {
+      background: #fff; border-radius: 16px; padding: 28px 24px; text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .contact-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(58,154,217,0.12); }
+    .contact-icon { font-size: 36px; margin-bottom: 14px; }
+    .contact-card h4 { font-size: 15px; font-weight: 800; color: #1a1a2e; margin-bottom: 8px; }
+    .contact-card p { font-size: 13.5px; color: #555; line-height: 1.7; }
+    .contact-card .highlight { font-size: 14px; font-weight: 700; color: #3a9ad9; margin-top: 8px; }
+
+    /* DIVIDER */
+    .divider { border: none; border-top: 1.5px solid #e4eff7; margin: 60px 0; }
+
+    /* FOOTER */
+    footer {
+      background: #d6eaf8; padding: 28px 60px;
+      display: flex; align-items: flex-start; gap: 40px;
+    }
+    .footer-col { flex: 1; }
+    .footer-col:first-child { flex: 1.5; }
+    .footer-col h3 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #1a1a2e; margin-bottom: 10px; }
+    .footer-table { border-collapse: collapse; }
+    .footer-table td { font-size: 13px; color: #333; line-height: 1.9; vertical-align: top; }
+    .footer-table td:first-child { font-weight: 600; padding-right: 10px; color: #1a1a2e; white-space: nowrap; }
+    .hours-table { border-collapse: collapse; }
+    .hours-table td { padding: 0; font-size: 13px; color: #333; line-height: 1.9; }
+    .social-icons { display: flex; gap: 10px; margin-top: 6px; align-items: center; }
+    .social-icon {
+      width: 40px; height: 40px; border-radius: 8px; background: #1a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; text-decoration: none; transition: opacity .2s;
+    }
+    .social-icon:hover { opacity: 0.75; }
+    .qr-icon {
+      width: 40px; height: 40px; border-radius: 8px; border: 2px solid #1a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; background: #fff;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6h24v18H4zM10 6V4h12v2M8 10h16M8 14h16M8 18h10" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M16 2 L20 6 L12 6 Z" fill="#fff"/>
+        <path d="M13 6 L13 26 M19 6 L19 26" stroke="#fff" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <strong>LIBRARY</strong>
+      <span>UNIVERSITY</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Trang chủ</a></li>
+    <li><a href="huongdan.html" class="active">Hướng dẫn</a></li>
+    <li><a href="gioithieu.html">Giới thiệu</a></li>
+  </ul>
+  <a href="dangnhap.html" class="btn-login" id="login-link" style="display:none;">Đăng nhập</a>
+
+  <div id="profile-block" style="position:relative; display:none;">
+    <button class="nav-user-btn" id="nav-user-btn" onclick="toggleDropdown()">
+      <div class="user-icon" id="nav-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#3a9ad9" stroke-width="1.8">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+      </div>
+      <span class="chevron">▼</span>
+    </button>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="dropdown-header">Hồ sơ cá nhân</div>
+      <a href="canhan.html" class="dropdown-item">
+        <span class="di-icon">☆</span> Thông tin cá nhân
+      </a>
+      <a href="giasach.html" class="dropdown-item">
+        <span class="di-icon">☆</span> Giá sách của tôi
+      </a>
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item logout" onclick="doLogout()">
+        <span class="di-icon">🚪</span> Đăng xuất
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Trang chủ</a>
+      <span>›</span>
+      <span style="color:#fff;">Hướng dẫn sử dụng</span>
+    </div>
+    <h1>Hướng dẫn sử dụng<br>Thư viện Đại học</h1>
+    <p>Tất cả thông tin bạn cần để khai thác tối đa dịch vụ thư viện — từ đăng ký tài khoản, tra cứu tài liệu, mượn – trả sách đến truy cập cơ sở dữ liệu học thuật quốc tế.</p>
+  </div>
+</div>
+
+<!-- QUICK NAVIGATION -->
+<div class="quick-nav">
+  <ul>
+    <li><a href="#dangky" class="active">Đăng ký tài khoản</a></li>
+    <li><a href="#tracuu">Tra cứu tài liệu</a></li>
+    <li><a href="#muontra">Mượn – Trả sách</a></li>
+    <li><a href="#noidquy">Nội quy</a></li>
+    <li><a href="#lienhe">Hỗ trợ</a></li>
+  </ul>
+</div>
+
+<div class="main">
+
+  <!-- ĐĂNG KÝ THẺ -->
+  <div class="guide-section" id="dangky">
+    <div class="sec-label">Bước đầu tiên</div>
+    <div class="sec-title">Đăng ký tài khoản</div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-icon">🌐</div>
+        <h4>Truy cập trang đăng ký</h4>
+        <p>Nhấn vào nút <strong>Đăng nhập</strong> ở góc trên bên phải trang chủ, sau đó chọn <strong>Tạo tài khoản mới</strong>.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-icon">📝</div>
+        <h4>Điền thông tin cá nhân</h4>
+        <p>Nhập đầy đủ họ tên, mã số sinh viên, địa chỉ email trường cấp và số điện thoại liên hệ vào form đăng ký.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-icon">🔒</div>
+        <h4>Đặt mật khẩu</h4>
+        <p>Tạo mật khẩu có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường và số. Ghi nhớ mật khẩu để đăng nhập lần sau.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <div class="step-icon">✅</div>
+        <h4>Hoàn tất đăng ký</h4>
+        <p>Nhấn <strong>Đăng ký</strong> để tạo tài khoản. Tài khoản được kích hoạt ngay lập tức, bạn có thể đăng nhập và sử dụng toàn bộ tính năng hệ thống.</p>
+      </div>
+    </div>
+    <div class="info-box">
+      <span class="icon">ℹ️</span>
+      <p>Tài khoản thư viện trực tuyến hoàn toàn <strong>miễn phí</strong> với tất cả sinh viên đang học. Sau khi đăng ký thành công, hệ thống sẽ tự động cấp <strong>mã độc giả</strong> dùng để mượn sách tại thư viện. Bạn cũng có thể tra cứu sách, xem lịch sử mượn – trả và cập nhật thông tin cá nhân mọi lúc, mọi nơi.</p>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- TRA CỨU -->
+  <div class="guide-section" id="tracuu">
+    <div class="sec-label">Tìm kiếm tài liệu</div>
+    <div class="sec-title">Cách tra cứu sách & tài liệu</div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-icon">🌐</div>
+        <h4>Tra cứu trực tuyến</h4>
+        <p>Truy cập cổng thư viện hoặc sử dụng thanh tìm kiếm ngay trên trang chủ này. Có thể lọc theo Tên sách, Tác giả hoặc Thể loại.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-icon">🖥️</div>
+        <h4>Tìm kiếm tại chỗ</h4>
+        <p>Sử dụng máy tính tra cứu (OPAC) đặt tại Tầng 1 và Tầng 2 để tìm kiếm toàn bộ kho sách của thư viện.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-icon">📍</div>
+        <h4>Ghi nhớ vị trí sách</h4>
+        <p>Kết quả tra cứu hiển thị rõ <strong>Tầng – Kệ sách – Ký hiệu phân loại</strong>. Dùng thông tin này để tìm sách trực tiếp trong kho.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <div class="step-icon">🙋</div>
+        <h4>Hỏi cán bộ thư viện</h4>
+        <p>Không tìm thấy sách? Nhân viên tại quầy tham khảo luôn sẵn sàng hỗ trợ bạn định vị tài liệu trong vòng vài phút.</p>
+      </div>
+    </div>
+    <div class="info-box">
+      <span class="icon">💡</span>
+      <p>Mẹo tìm kiếm hiệu quả: Dùng <strong>Ký hiệu phân loại DDC</strong> (ví dụ: 330 = Kinh tế học) để duyệt toàn bộ sách cùng chủ đề trong một khu vực kệ sách.</p>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- MƯỢN TRẢ -->
+  <div class="guide-section" id="muontra">
+    <div class="sec-label">Dịch vụ mượn – trả</div>
+    <div class="sec-title">Quy định mượn và trả tài liệu</div>
+
+    <table class="borrow-table">
+      <thead>
+        <tr>
+          <th>Đối tượng</th>
+          <th>Số lượng mượn tối đa</th>
+          <th>Thời hạn mượn</th>
+          <th>Phí quá hạn</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-blue">Sinh viên đại học</span></td>
+          <td>10 cuốn/lần</td>
+          <td>3 tháng</td>
+          <td>5.000đ/ngày</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">Học viên Cao học</span></td>
+          <td>10 cuốn/lần</td>
+          <td>3 tháng</td>
+          <td>5.000đ/ngày</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-orange">Giảng viên / Nghiên cứu sinh</span></td>
+          <td>15 cuốn/lần</td>
+          <td>3 tháng</td>
+          <td>Miễn phí</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <div class="warn-box">
+      <span class="icon">⚠️</span>
+      <p>Sách bị mất hoặc hư hỏng sẽ phải <strong>đền bù theo giá thị trường hiện tại</strong> hoặc cung cấp sách cùng tên, cùng phiên bản. Thẻ sẽ bị khóa đến khi hoàn thành nghĩa vụ đền bù.</p>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- NỘI QUY -->
+  <div class="guide-section" id="noidquy">
+    <div class="sec-label">Quy định</div>
+    <div class="sec-title">Nội quy sử dụng thư viện</div>
+    <div class="rule-grid">
+      <div class="rule-card">
+        <h4><span style="font-size:18px;">✅</span> Được phép</h4>
+        <ul>
+          <li data-icon="📖">Đọc, nghiên cứu và học tập trong không gian thư viện</li>
+          <li data-icon="💻">Sử dụng laptop và thiết bị cá nhân trong khu vực cho phép</li>
+          <li data-icon="📷">Chụp ảnh tài liệu cho mục đích nghiên cứu cá nhân (không flash)</li>
+          <li data-icon="🎧">Sử dụng tai nghe khi nghe nhạc/xem video</li>
+          <li data-icon="💧">Mang nước uống có nắp đậy vào phòng đọc</li>
+          <li data-icon="📦">Gửi cặp sách tại tủ khóa miễn phí tầng 1</li>
+        </ul>
+      </div>
+      <div class="rule-card">
+        <h4><span style="font-size:18px;">🚫</span> Không được phép</h4>
+        <ul>
+          <li data-icon="🍔">Ăn uống trong khu vực phòng đọc và phòng máy tính</li>
+          <li data-icon="📣">Nói chuyện ồn ào, tạo tiếng động làm ảnh hưởng người khác</li>
+          <li data-icon="📵">Để điện thoại ở chế độ chuông – hãy chuyển sang im lặng</li>
+          <li data-icon="✂️">Xé, gạch chân, viết vào sách và tài liệu của thư viện</li>
+          <li data-icon="🚪">Mang sách ra khỏi thư viện khi chưa làm thủ tục mượn</li>
+          <li data-icon="🐾">Mang động vật vào khu vực thư viện</li>
+        </ul>
+      </div>
+    </div>
+    <div class="info-box">
+      <span class="icon">📋</span>
+      <p>Vi phạm nội quy lần đầu sẽ được nhắc nhở. Tái phạm có thể dẫn đến <strong>đình chỉ quyền sử dụng thư viện</strong> trong thời gian nhất định. Mọi hành vi gây thiệt hại tài sản sẽ phải bồi thường theo quy định.</p>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+
+  <hr class="divider"/>
+
+  <!-- CONTACT -->
+  <div class="guide-section" id="lienhe" style="margin-bottom:0;">
+    <div class="sec-label">Hỗ trợ</div>
+    <div class="sec-title">Cần hỗ trợ thêm? Liên hệ chúng tôi</div>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-icon">🏛️</div>
+        <h4>Quầy phục vụ trực tiếp</h4>
+        <p>Tầng 1 – Tòa nhà Thư viện<br>Hồ Tùng Mậu, Từ Liêm, Hà Nội</p>
+        <div class="highlight">Thứ 2 – Thứ 6: 8:00 – 21:00<br>Thứ 7: 9:00 – 17:00</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📞</div>
+        <h4>Điện thoại & Email</h4>
+        <p>Gọi trực tiếp cho cán bộ thư viện để được hỗ trợ ngay lập tức về tra cứu tài liệu, đặt mượn và các vấn đề kỹ thuật.</p>
+        <div class="highlight">(84)24.12.345.678<br><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1f73767d6a7176697a6d6c766b665f78727e7673317c7072">[email&#160;protected]</a></div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">💬</div>
+        <h4>Chat trực tuyến</h4>
+        <p>Hỗ trợ qua chat trong giờ làm việc. Gửi câu hỏi bất kỳ lúc nào — đội ngũ thư viện sẽ phản hồi trong vòng 2 giờ làm việc.</p>
+        <div class="highlight">Hỗ trợ trực tuyến 24/7<br>qua cổng thư viện</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-col">
+    <h3>Liên hệ</h3>
+    <table class="footer-table">
+      <tr><td>Địa chỉ:</td><td>Hồ Tùng Mậu, Từ Liêm, Hà Nội, Việt Nam</td></tr>
+      <tr><td>Điện thoại:</td><td>(84)24.12.345.678</td></tr>
+      <tr><td>Email:</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="86eaefe4f3e8eff0e3f4f5eff2ffc6e1ebe7efeaa8e5e9eb">[email&#160;protected]</a></td></tr>
+    </table>
+  </div>
+  <div class="footer-col">
+    <h3>Thời gian hoạt động</h3>
+    <table class="hours-table">
+      <tr><td>Thứ 2 - Thứ 6: 8:00 – 21:00</td></tr>
+      <tr><td>Thứ 7: 9:00 – 17:00</td></tr>
+      <tr><td>Chủ nhật: Đóng cửa</td></tr>
+    </table>
+  </div>
+  <div class="footer-col">
+    <h3>Kết nối với chúng tôi</h3>
+    <div class="social-icons">
+      <div class="qr-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="5" y="5" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="14" y="3" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="16" y="5" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="3" y="14" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="5" y="16" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="14" y="14" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="17" y="14" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="14" y="17" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="17" y="17" width="4" height="4" fill="#1a1a2e"/>
+        </svg>
+      </div>
+      <a href="#" class="social-icon" style="background:#1877f2;">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="#fff"/></svg>
+      </a>
+      <a href="#" class="social-icon" style="background:#ff0000;">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" fill="#fff"/>
+          <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#ff0000"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Quick nav active highlight on scroll
+  const sections = document.querySelectorAll('.guide-section');
+  const navLinks = document.querySelectorAll('.quick-nav a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 160) current = sec.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+
+  // Profile dropdown and login-toggle logic
+  function toggleDropdown() {
+    var dd = document.getElementById('user-dropdown');
+    var btn = document.getElementById('nav-user-btn');
+    if (!dd || !btn) return;
+    dd.classList.toggle('show');
+    btn.classList.toggle('open');
+  }
+
+  document.addEventListener('click', function(e) {
+    var btn = document.getElementById('nav-user-btn');
+    var dd  = document.getElementById('user-dropdown');
+    if (!btn || !dd) return;
+    if (!btn.contains(e.target) && !dd.contains(e.target)) {
+      dd.classList.remove('show');
+      btn.classList.remove('open');
+    }
+  });
+
+  function doLogout() {
+    sessionStorage.removeItem('lib_user');
+    localStorage.removeItem('lib_user_remember');
+    window.location.href = 'index.html';
+  }
+
+  (function() {
+    var user = JSON.parse(sessionStorage.getItem('lib_user') || 'null');
+    var profileBlock = document.getElementById('profile-block');
+    var loginLink = document.getElementById('login-link');
+    if (user) {
+      if (profileBlock) profileBlock.style.display = 'inline-flex';
+      if (loginLink) loginLink.style.display = 'none';
+      if (user.avatar) {
+        var avatar = document.getElementById('nav-avatar');
+        if (avatar) {
+          avatar.innerHTML = '<img src="' + user.avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
+        }
+      }
+      var navName = document.getElementById('nav-name');
+      if (navName) navName.textContent = user.name || '';
+    } else {
+      if (profileBlock) profileBlock.style.display = 'none';
+      if (loginLink) loginLink.style.display = 'inline-flex';
+    }
+  })();
+</script>
+</body>
+</html>

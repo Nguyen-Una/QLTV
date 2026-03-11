@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kết quả tìm kiếm – Library University</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Be Vietnam Pro', sans-serif; background: #f0f6fb; color: #1a1a2e; min-height: 100vh; }
+
+    /* NAV */
+    nav { background: #d6eaf8; display: flex; align-items: center; justify-content: space-between; padding: 14px 60px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 48px; height: 48px; background: #1a1a2e; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .logo-text { line-height: 1.2; }
+    .logo-text strong { display: block; font-size: 15px; font-weight: 800; letter-spacing: 1px; color: #1a1a2e; }
+    .logo-text span { font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #1a1a2e; }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 15px; font-weight: 500; color: #333; padding-bottom: 2px; }
+    .nav-links a:hover { color: #1a1a2e; }
+    .nav-links a.active { font-weight: 700; color: #1a1a2e; border-bottom: 2.5px solid #1a1a2e; }
+    .btn-login { padding: 9px 24px; border: 2px solid #1a1a2e; border-radius: 8px; background: #fff; font-family: inherit; font-weight: 600; font-size: 14px; cursor: pointer; color: #1a1a2e; transition: all .2s; }
+    .btn-login:hover { background: #1a1a2e; color: #fff; }
+    .nav-user-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; padding: 6px 8px; border-radius: 8px; transition: background .15s; }
+    .nav-user-btn:hover { background: rgba(58,154,217,0.10); }
+    .nav-user-btn .user-icon { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 2px solid #3a9ad9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .nav-user-btn .user-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .nav-user-btn .user-icon svg { width: 20px; height: 20px; }
+    .nav-user-btn .chevron { font-size: 10px; color: #555; transition: transform .2s; }
+    .nav-user-btn.open .chevron { transform: rotate(180deg); }
+    .user-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: #fff; border-radius: 10px; box-shadow: 0 8px 28px rgba(0,0,0,0.13); min-width: 190px; z-index: 300; overflow: hidden; display: none; border: 1px solid #e8f0f7; }
+    .user-dropdown.show { display: block; animation: dropIn .18s ease; }
+    @keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .dropdown-header { padding: 11px 16px 8px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #999; border-bottom: 1px solid #f0f6fb; }
+    .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; font-size: 14px; font-weight: 500; color: #333; text-decoration: none; cursor: pointer; transition: background .15s; }
+    .dropdown-item:hover { background: #f0f6fb; color: #3a9ad9; }
+    .dropdown-item .di-icon { font-size: 15px; }
+    .dropdown-divider { border: none; border-top: 1px solid #f0f6fb; margin: 2px 0; }
+    .dropdown-item.logout { color: #e74c3c; }
+    .dropdown-item.logout:hover { background: #fff5f5; }
+
+    /* BACK */
+    .back-to-home { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #3a9ad9; font-weight: 600; text-decoration: none; margin: 18px 0 18px 24px; opacity: 0.85; transition: opacity .2s; }
+    .back-to-home:hover { opacity: 1; }
+
+    /* SEARCH BAR */
+    .search-top { padding: 0 60px; display: flex; justify-content: center; max-width: 900px; margin: 0 auto; }
+    .search-bar-top { display: flex; align-items: center; background: #fff; border-radius: 10px; overflow: visible; box-shadow: 0 2px 12px rgba(0,0,0,0.10); width: 100%; max-width: 860px; border: 2px solid #3a9ad9; }
+
+    /* Select bộ lọc – dùng <select> native đơn giản, không custom */
+    .search-select-top {
+      height: 50px; padding: 0 36px 0 14px; border: none; outline: none;
+      background: #fff; font-family: inherit; font-size: 14px; font-weight: 600;
+      color: #3a9ad9; border-right: 2px solid #3a9ad9;
+      cursor: pointer; appearance: none; -webkit-appearance: none;
+      flex-shrink: 0; min-width: 150px; border-radius: 8px 0 0 8px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233a9ad9' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; background-color: #fff;
+    }
+    .search-input-top { flex: 1; height: 50px; border: none; outline: none; padding: 0 18px; font-family: inherit; font-size: 15px; color: #333; }
+    .search-btn-top { width: 60px; height: 50px; background: #3a9ad9; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; flex-shrink: 0; border-radius: 0 8px 8px 0; }
+    .search-btn-top:hover { background: #2b7eb8; }
+
+    /* Genre dropdown – position:fixed qua JS */
+    .genre-panel {
+      display: none; position: fixed;
+      background: #fff; border-radius: 10px; min-width: 210px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.18); z-index: 9999;
+      border: 1px solid #e0eaf4; overflow: hidden;
+    }
+    .genre-panel.open { display: block; animation: dropIn .15s ease; }
+    .genre-item { padding: 11px 18px; font-size: 14px; font-weight: 500; color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap; }
+    .genre-item:hover, .genre-item.active { background: #3a9ad9; color: #fff; }
+
+    /* MAIN */
+    .main { padding: 32px 60px 60px; }
+    .result-heading { font-size: 22px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; line-height: 1.35; }
+    .result-heading span { font-style: italic; }
+    .result-count-label { font-size: 13.5px; color: #888; font-weight: 500; margin-bottom: 28px; }
+    .result-count-label strong { color: #3a9ad9; font-weight: 700; }
+
+    /* GRID */
+    .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 28px; }
+    @media (max-width: 1000px) { .results-grid { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 700px)  { .results-grid { grid-template-columns: repeat(2,1fr); } }
+    .book-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); transition: transform .2s, box-shadow .2s; display: flex; flex-direction: column; }
+    .book-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+    .book-cover { width: 100%; height: 260px; object-fit: contain; display: block; background: #e8f0f7; }
+    .book-info { padding: 10px 12px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; justify-content: flex-end; }
+    .book-title { font-size: 12.5px; font-weight: 700; color: #1a1a2e; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .btn-detail { display: block; width: 100%; padding: 7px 0; background: #3a9ad9; border: none; border-radius: 7px; color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; text-align: center; text-transform: uppercase; transition: background .2s; text-decoration: none; }
+    .btn-detail:hover { background: #1a1a2e; }
+    .empty-state { text-align: center; padding: 60px 20px; color: #aaa; grid-column: 1/-1; }
+    .empty-state p { font-size: 15px; margin-top: 12px; }
+
+    /* FOOTER */
+    footer { margin-top: 40px; background: #d6eaf8; padding: 28px 60px; display: flex; align-items: flex-start; gap: 40px; }
+    .footer-col { flex: 1; }
+    .footer-col:first-child { flex: 1.5; }
+    .footer-col h3 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #1a1a2e; margin-bottom: 10px; }
+    .footer-table-f { border-collapse: collapse; }
+    .footer-table-f td { font-size: 13px; color: #333; line-height: 1.9; vertical-align: top; }
+    .footer-table-f td:first-child { font-weight: 600; padding-right: 10px; color: #1a1a2e; white-space: nowrap; }
+    .hours-table { border-collapse: collapse; }
+    .hours-table td { padding: 0; font-size: 13px; color: #333; line-height: 1.9; }
+    .social-icons { display: flex; gap: 10px; margin-top: 6px; align-items: center; }
+    .social-icon { width: 40px; height: 40px; border-radius: 8px; background: #1a1a2e; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; transition: opacity .2s; }
+    .social-icon:hover { opacity: 0.75; }
+    .qr-icon { width: 40px; height: 40px; border-radius: 8px; border: 2px solid #1a1a2e; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fff; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6h24v18H4zM10 6V4h12v2M8 10h16M8 14h16M8 18h10" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M16 2 L20 6 L12 6 Z" fill="#fff"/>
+        <path d="M13 6 L13 26 M19 6 L19 26" stroke="#fff" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+    <div class="logo-text"><strong>LIBRARY</strong><span>UNIVERSITY</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Trang chủ</a></li>
+    <li><a href="huongdan.html">Hướng dẫn</a></li>
+    <li><a href="gioithieu.html">Giới thiệu</a></li>
+  </ul>
+  <a href="dangnhap.html" class="btn-login" id="login-link" style="display:none;">Đăng nhập</a>
+  <div id="profile-block" style="position:relative; display:none;">
+    <button class="nav-user-btn" id="nav-user-btn" onclick="toggleDropdown()">
+      <div class="user-icon" id="nav-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#3a9ad9" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <span class="chevron">▼</span>
+    </button>
+    <div class="user-dropdown" id="user-dropdown">
+      <div class="dropdown-header">Hồ sơ cá nhân</div>
+      <a href="canhan.html" class="dropdown-item"><span class="di-icon">☆</span> Thông tin cá nhân</a>
+      <a href="giasach.html" class="dropdown-item"><span class="di-icon">☆</span> Giá sách của tôi</a>
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item logout" onclick="doLogout()"><span class="di-icon">🚪</span> Đăng xuất</div>
+    </div>
+  </div>
+</nav>
+
+<!-- BACK LINK -->
+<a href="index.html" class="back-to-home">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3a9ad9" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+  Quay về trang chủ
+</a>
+
+<!-- SEARCH BAR -->
+<div class="search-top">
+  <div class="search-bar-top">
+    <select class="search-select-top" id="searchSelect" onchange="onFilterChange(this.value)">
+      <option value="all">Tất cả</option>
+      <option value="title">Tên sách</option>
+      <option value="author">Tác giả/NXB</option>
+      <option value="genre">Thể loại</option>
+    </select>
+    <!-- Genre dropdown – fixed positioning qua JS -->
+    <div class="genre-panel" id="genrePanel">
+      <div class="genre-item" onclick="pickGenre('Giáo trình')">Giáo trình</div>
+      <div class="genre-item" onclick="pickGenre('Sách tham khảo')">Sách tham khảo</div>
+      <div class="genre-item" onclick="pickGenre('Tài liệu ôn thi')">Tài liệu ôn thi</div>
+      <div class="genre-item" onclick="pickGenre('Nghiên cứu khoa học')">Nghiên cứu khoa học</div>
+      <div class="genre-item" onclick="pickGenre('Sách bài tập')">Sách bài tập</div>
+      <div class="genre-item" onclick="pickGenre('Khác')">Khác</div>
+    </div>
+    <input type="text" class="search-input-top" id="searchInput" placeholder="Nhập từ khóa tìm kiếm..." />
+    <button class="search-btn-top" onclick="doSearch()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round">
+        <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="result-heading" id="resultHeading">Kết quả tìm kiếm</div>
+  <div class="result-count-label" id="resultCount"></div>
+  <div class="results-grid" id="resultsGrid"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-col">
+    <h3>Liên hệ</h3>
+    <table class="footer-table-f">
+      <tr><td>Địa chỉ:</td><td>Hồ Tùng Mậu, Từ Liêm, Hà Nội, Việt Nam</td></tr>
+      <tr><td>Điện thoại:</td><td>(84)24.12.345.678</td></tr>
+      <tr><td>Email:</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="82eeebe0f7ecebf4e7f0f1ebf6fbc2e5efe3ebeeace1edef">[email&#160;protected]</a></td></tr>
+    </table>
+  </div>
+  <div class="footer-col">
+    <h3>Thời gian hoạt động</h3>
+    <table class="hours-table">
+      <tr><td>Thứ 2 - Thứ 6: 8:00 – 21:00</td></tr>
+      <tr><td>Thứ 7: 9:00 – 17:00</td></tr>
+      <tr><td>Chủ nhật: Đóng cửa</td></tr>
+    </table>
+  </div>
+  <div class="footer-col">
+    <h3>Kết nối với chúng tôi</h3>
+    <div class="social-icons">
+      <div class="qr-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="5" y="5" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="14" y="3" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="16" y="5" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="3" y="14" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="5" y="16" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="14" y="14" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="17" y="14" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="14" y="17" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="17" y="17" width="4" height="4" fill="#1a1a2e"/>
+        </svg>
+      </div>
+      <a href="#" class="social-icon" style="background:#1877f2;">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="#fff"/></svg>
+      </a>
+      <a href="#" class="social-icon" style="background:#ff0000;">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" fill="#fff"/>
+          <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#ff0000"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="books.js"></script>
+<script>
+  // ── Đọc URL params ──
+  var params        = new URLSearchParams(window.location.search);
+  var currentQuery  = params.get('q')      || '';
+  var currentFilter = params.get('filter') || 'all';
+
+  // ── Điền lại search bar từ URL ──
+  document.getElementById('searchInput').value = currentQuery;
+  var sel = document.getElementById('searchSelect');
+  for (var i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === currentFilter) { sel.selectedIndex = i; break; }
+  }
+
+  // ── Tìm kiếm ──
+  var filterLabel = { all: 'Tất cả', title: 'Tên sách', author: 'Tác giả/NXB', genre: 'Thể loại' };
+
+  // Chuẩn hoá: bỏ dấu, thường hoá — tìm kiếm không phân biệt dấu tiếng Việt
+  function norm(s) {
+    return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  function filterBooks(q, filter) {
+    var nq = norm(q);
+    if (!nq) return [];
+    return Object.keys(books).filter(function(id) {
+      var b = books[id];
+      if (filter === 'title')  return norm(b.title).includes(nq);
+      if (filter === 'author') return norm(b.author).includes(nq) || norm(b.publisher).includes(nq);
+      if (filter === 'genre')  return norm(b.type).includes(nq);
+      // all
+      return (norm(b.title) + ' ' + norm(b.author) + ' ' + norm(b.publisher) + ' ' + norm(b.type)).includes(nq);
+    });
+  }
+
+  function render(query, filter) {
+    var heading = document.getElementById('resultHeading');
+    var countEl = document.getElementById('resultCount');
+    var grid    = document.getElementById('resultsGrid');
+
+    if (!query || !query.trim()) {
+      heading.innerHTML = 'Nhập từ khóa để tìm kiếm sách';
+      countEl.innerHTML = '';
+      grid.innerHTML = '';
+      return;
+    }
+
+    var matched = filterBooks(query, filter);
+    var label   = filterLabel[filter] || 'Tất cả';
+    heading.innerHTML = 'Kết quả tìm kiếm theo ' + label + ': <span>"' + query + '"</span>';
+
+    if (matched.length === 0) {
+      countEl.innerHTML = '';
+      grid.innerHTML =
+        '<div class="empty-state">' +
+          '<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">' +
+            '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round"/>' +
+          '</svg>' +
+          '<p>Không tìm thấy sách phù hợp với từ khóa này.</p>' +
+        '</div>';
+      return;
+    }
+
+    countEl.innerHTML = 'Tìm thấy <strong>' + matched.length + '</strong> kết quả';
+    grid.innerHTML = matched.map(function(id) {
+      var b = books[id];
+      return '<div class="book-card">' +
+        '<img class="book-cover" src="' + b.image + '" alt="' + b.title + '" onerror="this.style.background=\'#e8f0f7\';this.removeAttribute(\'src\');" />' +
+        '<div class="book-info">' +
+          '<div class="book-title">' + b.title + '</div>' +
+          '<a class="btn-detail" href="chitiet.html?id=' + id + '&from=search&q=' + encodeURIComponent(query) + '&filter=' + encodeURIComponent(filter) + '">Chi tiết</a>' +
+        '</div></div>';
+    }).join('');
+
+    // Highlight genre item nếu đang lọc thể loại
+    if (filter === 'genre') {
+      document.querySelectorAll('.genre-item').forEach(function(el) {
+        el.classList.toggle('active', el.textContent.trim() === query);
+      });
+    }
+  }
+
+  // Chạy render ngay khi tải trang
+  render(currentQuery, currentFilter);
+
+  // ── Tìm kiếm khi ấn nút / Enter ──
+  function doSearch() {
+    var q = document.getElementById('searchInput').value.trim();
+    var f = document.getElementById('searchSelect').value;
+    if (!q) { alert('Vui lòng nhập từ khóa muốn tìm.'); return; }
+    window.location.href = 'timkiem.html?q=' + encodeURIComponent(q) + '&filter=' + encodeURIComponent(f);
+  }
+  document.getElementById('searchInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doSearch();
+  });
+
+  // ── Genre dropdown ──
+  function onFilterChange(val) {
+    var panel = document.getElementById('genrePanel');
+    if (val === 'genre') {
+      var rect = document.getElementById('searchSelect').getBoundingClientRect();
+      panel.style.top  = (rect.bottom + 6) + 'px';
+      panel.style.left = rect.left + 'px';
+      panel.classList.add('open');
+    } else {
+      panel.classList.remove('open');
+    }
+  }
+
+  function pickGenre(name) {
+    document.getElementById('searchInput').value = name;
+    document.getElementById('genrePanel').classList.remove('open');
+    window.location.href = 'timkiem.html?q=' + encodeURIComponent(name) + '&filter=genre';
+  }
+
+  document.addEventListener('click', function(e) {
+    var panel = document.getElementById('genrePanel');
+    var sel   = document.getElementById('searchSelect');
+    if (panel && sel && !panel.contains(e.target) && e.target !== sel) {
+      panel.classList.remove('open');
+    }
+  });
+
+  // ── Nav: login state ──
+  function toggleDropdown() {
+    var dd  = document.getElementById('user-dropdown');
+    var btn = document.getElementById('nav-user-btn');
+    if (!dd || !btn) return;
+    dd.classList.toggle('show');
+    btn.classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    var btn = document.getElementById('nav-user-btn');
+    var dd  = document.getElementById('user-dropdown');
+    if (!btn || !dd) return;
+    if (!btn.contains(e.target) && !dd.contains(e.target)) {
+      dd.classList.remove('show');
+      btn.classList.remove('open');
+    }
+  });
+  function doLogout() {
+    sessionStorage.removeItem('lib_user');
+    localStorage.removeItem('lib_user_remember');
+    window.location.href = 'index.html';
+  }
+  (function() {
+    var user = JSON.parse(sessionStorage.getItem('lib_user') || 'null');
+    var pb   = document.getElementById('profile-block');
+    var ll   = document.getElementById('login-link');
+    if (user) {
+      if (pb) pb.style.display = 'inline-flex';
+      if (ll) ll.style.display = 'none';
+      if (user.avatar) {
+        var av = document.getElementById('nav-avatar');
+        if (av) av.innerHTML = '<img src="' + user.avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
+      }
+      var navName = document.getElementById('nav-name');
+      if (navName) navName.textContent = user.name || '';
+    } else {
+      if (pb) pb.style.display = 'none';
+      if (ll) ll.style.display = 'inline-flex';
+    }
+  })();
+</script>
+</body>
+</html>

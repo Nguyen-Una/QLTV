@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thông tin cá nhân – Library University</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Be Vietnam Pro', sans-serif; background: #f0f6fb; color: #1a1a2e; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ===== NAV ===== */
+    nav {
+      background: #d6eaf8;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 40px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      position: sticky; top: 0; z-index: 200;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon {
+      width: 44px; height: 44px; background: #1a1a2e; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo-text strong { display: block; font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #1a1a2e; }
+    .logo-text span   { font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #1a1a2e; }
+
+    /* Nav right: greeting + user icon + dropdown */
+    .nav-links { display: flex; gap: 40px; align-items: center; list-style: none; }
+    .nav-link {
+      text-decoration: none; font-size: 15px; font-weight: 500; color: #333;
+      padding-bottom: 2px;
+    }
+    .nav-link.active {
+      font-weight: 700; color: #1a1a2e;
+      border-bottom: 2.5px solid #1a1a2e;
+    }
+    .nav-link:hover { color: #1a1a2e; }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; position: relative; }
+
+    .btn-login {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 18px; border-radius: 10px;
+      background: #1a1a2e; color: #fff; font-weight: 700;
+      text-decoration: none; transition: opacity .2s, background .2s;
+    }
+    .btn-login:hover { opacity: 0.85; }
+
+    .nav-greeting {
+      font-size: 14px; font-weight: 700; color: #1a1a2e;
+      text-transform: uppercase; letter-spacing: 0.3px;
+      margin-right: 12px;
+    }
+    .nav-user-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer;
+      padding: 6px 8px; border-radius: 8px;
+      transition: background .15s;
+    }
+    .nav-user-btn:hover { background: rgba(58,154,217,0.10); }
+    .nav-user-btn .user-icon {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #fff; border: 2px solid #3a9ad9;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .nav-user-btn .user-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .nav-user-btn .user-icon svg { width: 20px; height: 20px; }
+    .nav-user-btn .chevron {
+      font-size: 10px; color: #555; transition: transform .2s;
+    }
+    .nav-user-btn.open .chevron { transform: rotate(180deg); }
+
+    /* Dropdown */
+    .user-dropdown {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: #fff; border-radius: 10px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+      min-width: 190px; z-index: 300;
+      overflow: hidden; display: none;
+      border: 1px solid #e8f0f7;
+    }
+    .user-dropdown.show { display: block; animation: dropIn .18s ease; }
+    @keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .dropdown-header {
+      padding: 11px 16px 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: #999; border-bottom: 1px solid #f0f6fb;
+    }
+    .dropdown-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; font-size: 14px; font-weight: 500; color: #333;
+      text-decoration: none; cursor: pointer; transition: background .15s;
+    }
+    .dropdown-item:hover { background: #f0f6fb; color: #3a9ad9; }
+    .dropdown-item.active { color: #3a9ad9; font-weight: 700; }
+    .dropdown-item .di-icon { font-size: 15px; }
+    .dropdown-divider { border: none; border-top: 1px solid #f0f6fb; margin: 2px 0; }
+    .dropdown-item.logout { color: #e74c3c; }
+    .dropdown-item.logout:hover { background: #fff5f5; }
+
+    /* ===== MAIN ===== */
+    .main {
+      flex: 1; padding: 36px 40px 60px;
+      max-width: 900px; width: 100%; margin: 0 auto;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .page-title {
+      font-size: 26px; font-weight: 800; color: #3a9ad9;
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    /* Profile card */
+    .profile-card {
+      width: 100%; max-width: 760px;
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(58,154,217,0.09);
+      padding: 32px 36px;
+      display: flex; gap: 36px; align-items: flex-start;
+      margin: 0 auto;
+    }
+
+    /* Member code badge */
+    .member-code {
+      display: flex; align-items: baseline; gap: 12px;
+      margin-bottom: 22px;
+    }
+    .member-code-label {
+      font-size: 13px; font-weight: 600; color: #1a1a2e;
+    }
+    .member-code-value {
+      font-size: 26px; font-weight: 800; color: #0d47a1;
+      letter-spacing: 0.8px;
+    }
+
+    /* Hide the original code input row since the code is shown prominently */
+    #fr-code { display: none; }
+
+    /* Avatar column */
+    .avatar-col { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .avatar-wrap {
+      width: 120px; height: 120px; border-radius: 16px;
+      overflow: hidden; background: #e8f4fd;
+      border: 2px solid #d6eaf8;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; position: relative;
+    }
+    .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .avatar-wrap .avatar-placeholder {
+      font-size: 52px; line-height: 1;
+    }
+    .avatar-wrap .avatar-overlay {
+      position: absolute; inset: 0; background: rgba(58,154,217,0.0);
+      transition: background .2s; display: flex; align-items: center; justify-content: center;
+    }
+    .avatar-wrap:hover .avatar-overlay { background: rgba(58,154,217,0.18); }
+    .avatar-change-label {
+      font-size: 12px; color: #3a9ad9; font-weight: 600; cursor: pointer;
+      text-align: center;
+    }
+    #avatar-input { display: none; }
+
+    /* Form column */
+    .form-col { flex: 1; display: flex; flex-direction: column; gap: 0; }
+    .form-row { margin-bottom: 16px; }
+    .form-label {
+      font-size: 13.5px; font-weight: 600; color: #1a1a2e;
+      margin-bottom: 6px; display: block;
+    }
+    .form-label .req { color: #3a9ad9; margin-left: 2px; }
+    .form-input {
+      width: 100%; height: 40px; border: 1.5px solid #c8dff0;
+      border-radius: 7px; padding: 0 13px;
+      font-family: inherit; font-size: 14px; color: #333; outline: none;
+      transition: border-color .2s, box-shadow .2s; background: #fff;
+    }
+    .form-input:focus { border-color: #3a9ad9; box-shadow: 0 0 0 3px rgba(58,154,217,0.10); }
+    .form-input::placeholder { color: #bbb; font-style: italic; }
+    .form-input[readonly] {
+      background: transparent;
+      border: none;
+      color: #666;
+      font-weight: 700;
+      cursor: default;
+      padding-left: 0;
+    }
+
+    .form-col.view-mode .form-input {
+      border: none !important;
+      background-color: transparent !important;
+      background-image: none !important;
+      padding: 0 !important;
+      font-weight: 500;
+      color: #1a1a2e;
+      box-shadow: none !important;
+      outline: none !important;
+      caret-color: transparent !important;
+      -webkit-text-fill-color: #1a1a2e !important;
+      -webkit-appearance: none !important;
+      pointer-events: none;
+      user-select: none;
+    }
+    .form-col.view-mode .form-input:-webkit-autofill,
+    .form-col.view-mode .form-input:-webkit-autofill:focus {
+      background-color: transparent !important;
+      box-shadow: 0 0 0px 1000px transparent inset !important;
+      -webkit-text-fill-color: #1a1a2e !important;
+    }
+
+    .form-col.view-mode .form-input:focus {
+      box-shadow: none !important;
+      outline: none !important;
+    }
+
+    /* Password toggle section */
+    .pass-toggle-header {
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; user-select: none; margin-bottom: 0;
+      padding: 4px 0;
+    }
+    .pass-toggle-header span { font-size: 13.5px; font-weight: 600; color: #1a1a2e; }
+    .pass-toggle-header .chevron-icon { font-size: 11px; color: #555; transition: transform .2s; }
+    .pass-toggle-header.open .chevron-icon { transform: rotate(180deg); }
+    .pass-fields { display: none; margin-top: 12px; display: flex; flex-direction: column; gap: 14px; }
+    .pass-fields.hidden { display: none; }
+    .pass-field-wrap { position: relative; }
+    .pass-field-wrap .form-input { padding-right: 42px; }
+    .pass-eye {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      cursor: pointer; font-size: 15px; color: #aaa; user-select: none;
+    }
+
+    /* Buttons row */
+    .btn-row {
+      display: flex; justify-content: flex-end; gap: 14px;
+      margin-top: 28px; padding-top: 20px;
+      border-top: 1px solid #f0f6fb;
+    }
+    #edit-actions {
+      display: none;
+      gap: 14px;
+    }
+    .btn-edit {
+      padding: 10px 32px; border: none; border-radius: 8px;
+      background: #3a9ad9; color: #fff; font-family: inherit;
+      font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; cursor: pointer; transition: background .2s;
+    }
+    .btn-edit:hover { background: #2b7eb8; }
+    .btn-cancel {
+      padding: 10px 32px; border: none; border-radius: 8px;
+      background: #e74c3c; color: #fff; font-family: inherit;
+      font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; cursor: pointer; transition: background .2s;
+    }
+    .btn-cancel:hover { background: #c0392b; }
+    .btn-save {
+      padding: 10px 32px; border: none; border-radius: 8px;
+      background: #2ecc71; color: #fff; font-family: inherit;
+      font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; cursor: pointer; transition: background .2s;
+    }
+    .btn-save:hover { background: #27ae60; }
+
+    /* Toast notification */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+      background: #1a2a4a; color: #fff; padding: 13px 22px;
+      border-radius: 10px; font-size: 14px; font-weight: 600;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+      display: none; align-items: center; gap: 10px;
+      animation: slideUp .3s ease;
+    }
+    .toast.show { display: flex; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    .toast.success { background: #1a6b3a; }
+    .toast.error   { background: #a93226; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #d6eaf8; padding: 24px 40px;
+      display: flex; align-items: flex-start; gap: 40px;
+      margin-top: auto;
+    }
+    .footer-col { flex: 1; }
+    .footer-col:first-child { flex: 1.5; }
+    .footer-col h3 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #1a1a2e; margin-bottom: 8px; }
+    .footer-table { border-collapse: collapse; }
+    .footer-table td { font-size: 13px; color: #333; line-height: 1.9; vertical-align: top; }
+    .footer-table td:first-child { font-weight: 600; padding-right: 10px; color: #1a1a2e; white-space: nowrap; }
+    .hours-table { border-collapse: collapse; }
+    .hours-table td { padding: 0; font-size: 13px; color: #333; line-height: 1.9; }
+    .social-icons { display: flex; gap: 10px; margin-top: 6px; align-items: center; }
+    .social-icon {
+      width: 40px; height: 40px; border-radius: 8px; background: #1a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; text-decoration: none; transition: opacity .2s;
+    }
+    .social-icon:hover { opacity: 0.75; }
+    .qr-icon {
+      width: 40px; height: 40px; border-radius: 8px; border: 2px solid #1a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; background: #fff;
+    }
+
+    /* Validation error */
+    .field-err { font-size: 12px; color: #e74c3c; margin-top: 4px; display: none; }
+    .has-error .form-input { border-color: #e74c3c; }
+    .has-error .field-err { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 32 32" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6h24v18H4zM10 6V4h12v2M8 10h16M8 14h16M8 18h10" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M16 2 L20 6 L12 6 Z" fill="#fff"/>
+        <path d="M13 6 L13 26 M19 6 L19 26" stroke="#fff" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <strong>LIBRARY</strong>
+      <span>UNIVERSITY</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+    <li><a href="huongdan.html" class="nav-link">Hướng dẫn</a></li>
+    <li><a href="gioithieu.html" class="nav-link">Giới thiệu</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="dangnhap.html" class="btn-login" id="login-link" style="display:none;">Đăng nhập</a>
+
+    <div id="profile-block" style="position:relative; display:none;">
+      <button class="nav-user-btn" id="nav-user-btn" onclick="toggleDropdown()">
+        <div class="user-icon" id="nav-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3a9ad9" stroke-width="1.8">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </div>
+        <span class="chevron">▼</span>
+      </button>
+      <div class="user-dropdown" id="user-dropdown">
+        <div class="dropdown-header">Hồ sơ cá nhân</div>
+        <a href="canhan.html" class="dropdown-item active">
+          <span class="di-icon">☆</span> Thông tin cá nhân
+        </a>
+        <a href="giasach.html" class="dropdown-item">
+          <span class="di-icon">☆</span> Giá sách của tôi
+        </a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item logout" onclick="doLogout()">
+          <span class="di-icon">🚪</span> Đăng xuất
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+  <div class="page-title">Thông tin cá nhân</div>
+
+  <div class="profile-card">
+    <!-- Avatar -->
+    <div class="avatar-col">
+      <div class="avatar-wrap" onclick="document.getElementById('avatar-input').click()">
+        <img id="avatar-img" src="" alt="Avatar" style="display:none;" />
+        <div class="avatar-placeholder" id="avatar-placeholder">🦦</div>
+        <div class="avatar-overlay"></div>
+      </div>
+      <input type="file" id="avatar-input" accept="image/*" onchange="changeAvatar(event)" />
+      <label class="avatar-change-label" onclick="document.getElementById('avatar-input').click()">
+        Thay đổi ảnh (3×3)
+      </label>
+    </div>
+
+    <!-- Form -->
+    <div class="form-col">
+      <div class="member-code">
+        <span class="member-code-label">Mã độc giả</span>
+        <span class="member-code-value" id="member-code-value">PM0102</span>
+      </div>
+
+      <div class="form-row" id="fr-username">
+        <label class="form-label">Tên đăng nhập</label>
+        <input type="text" class="form-input" id="f-username" autocomplete="off" readonly />
+      </div>
+
+      <div class="form-row" id="fr-email">
+        <label class="form-label">Email</label>
+        <input type="text" class="form-input" id="f-email" autocomplete="off" readonly oninput="updateSaveButtonState()" />
+        <div class="field-err" id="err-email"></div>
+      </div>
+
+      <div class="form-row" id="fr-name">
+        <label class="form-label">Họ và tên <span class="req">*</span></label>
+        <input type="text" class="form-input" id="f-name" autocomplete="off" placeholder="PHẠM YÊN NHI" readonly oninput="updateSaveButtonState()" />
+        <div class="field-err" id="err-name"></div>
+      </div>
+
+      <div class="form-row" id="fr-gender">
+        <label class="form-label">Giới tính</label>
+        <div style="display:flex;gap:14px;align-items:center;">
+          <label style="font-size:13px;"><input type="radio" name="f-gender" value="nam" disabled /> Nam</label>
+          <label style="font-size:13px;"><input type="radio" name="f-gender" value="nu" disabled /> Nữ</label>
+          <label style="font-size:13px;"><input type="radio" name="f-gender" value="khac" disabled /> Khác</label>
+        </div>
+      </div>
+
+      <div class="form-row" id="fr-class">
+        <label class="form-label">Lớp</label>
+        <input type="text" class="form-input" id="f-class" autocomplete="off" placeholder="Ví dụ: K58CN" readonly oninput="updateSaveButtonState()" />
+        <div class="field-err" id="err-class"></div>
+      </div>
+
+      <div class="form-row" id="fr-phone">
+        <label class="form-label">Số điện thoại</label>
+        <input type="text" class="form-input" id="f-phone" autocomplete="off" placeholder="0123 456 789" readonly oninput="updateSaveButtonState()" />
+        <div class="field-err" id="err-phone"></div>
+      </div>
+
+      <div class="form-row" id="fr-code">
+        <label class="form-label">Mã độc giả <span class="req">*</span></label>
+        <input type="text" class="form-input" id="f-code" autocomplete="off" placeholder="SV0123" readonly />
+        <div class="field-err"></div>
+      </div>
+
+      <!-- Thay mật khẩu toggle -->
+      <div class="form-row">
+        <div class="pass-toggle-header" id="pass-toggle" onclick="togglePassSection()">
+          <span>Thay mật khẩu</span>
+          <span class="chevron-icon" id="pass-chevron">▼</span>
+        </div>
+        <div class="pass-fields hidden" id="pass-fields">
+          <div id="fr-oldpass">
+            <div class="pass-field-wrap">
+              <input type="password" class="form-input" id="f-oldpass" autocomplete="off" placeholder="Nhập mật khẩu cũ ..." oninput="updateSaveButtonState()" />
+              <span class="pass-eye" onclick="togglePassVis('f-oldpass',this)">👁</span>
+            </div>
+            <div class="field-err" id="err-oldpass"></div>
+          </div>
+          <div id="fr-newpass">
+            <div class="pass-field-wrap">
+              <input type="password" class="form-input" id="f-newpass" autocomplete="off" placeholder="Nhập mật khẩu mới ..." oninput="checkNewPassMatch(); updateSaveButtonState();" />
+              <span class="pass-eye" onclick="togglePassVis('f-newpass',this)">👁</span>
+            </div>
+            <div class="field-err" id="err-newpass"></div>
+          </div>
+          <div id="fr-newpass2">
+            <div class="pass-field-wrap">
+              <input type="password" class="form-input" id="f-newpass2" autocomplete="off" placeholder="Xác nhận mật khẩu mới ..." oninput="checkNewPassMatch(); updateSaveButtonState();" />
+              <span class="pass-eye" onclick="togglePassVis('f-newpass2',this)">👁</span>
+            </div>
+            <div class="field-err" id="err-newpass2"></div>
+            <div id="pass-match-ok" style="display:none;font-size:12px;color:#2ecc71;margin-top:4px;">✓ Mật khẩu khớp</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="btn-row">
+        <button class="btn-edit" id="btn-edit" onclick="enterEditMode()">Chỉnh sửa</button>
+        <div id="edit-actions" style="display:none;">
+          <button class="btn-cancel" onclick="doCancel()">Hủy</button>
+          <button id="btn-save" class="btn-save" onclick="doSave()">Lưu thông tin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-col">
+    <h3>Liên hệ</h3>
+    <table class="footer-table">
+      <tr><td>Địa chỉ:</td><td>Hồ Tùng Mậu, Từ Liêm, Hà Nội, Việt Nam</td></tr>
+      <tr><td>Điện thoại:</td><td>(84)24.12.345.678</td></tr>
+      <tr><td>Email:</td><td>libuniversity@gmail.com</td></tr>
+    </table>
+  </div>
+  <div class="footer-col">
+    <h3>Thời gian hoạt động</h3>
+    <table class="hours-table">
+      <tr><td>Thứ 2 - Thứ 6: 8:00 – 21:00</td></tr>
+      <tr><td>Thứ 7: 9:00 – 17:00</td></tr>
+      <tr><td>Chủ nhật: Đóng cửa</td></tr>
+    </table>
+  </div>
+  <div class="footer-col">
+    <h3>Kết nối với chúng tôi</h3>
+    <div class="social-icons">
+      <div class="qr-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="5" y="5" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="14" y="3" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="16" y="5" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="3" y="14" width="7" height="7" rx="1" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="5" y="16" width="3" height="3" fill="#1a1a2e"/>
+          <rect x="14" y="14" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="17" y="14" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="14" y="17" width="2" height="2" fill="#1a1a2e"/>
+          <rect x="17" y="17" width="4" height="4" fill="#1a1a2e"/>
+        </svg>
+      </div>
+      <a href="#" class="social-icon" style="background:#1877f2;">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="#fff"/></svg>
+      </a>
+      <a href="#" class="social-icon" style="background:#ff0000;">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" fill="#fff"/>
+          <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#ff0000"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Đọc thông tin user từ sessionStorage ──
+  var user = JSON.parse(sessionStorage.getItem('lib_user') || 'null');
+  if (!user) {
+    // Chưa đăng nhập → về trang đăng nhập
+    window.location.href = 'dangnhap.html';
+  }
+
+  // Nếu đã đăng nhập, hiển thị khung hồ sơ; nếu chưa thì hiện nút đăng nhập
+  var profileBlock = document.getElementById('profile-block');
+  var loginLink = document.getElementById('login-link');
+  if (user) {
+    if (profileBlock) profileBlock.style.display = 'inline-flex';
+    if (loginLink) loginLink.style.display = 'none';
+  } else {
+    if (profileBlock) profileBlock.style.display = 'none';
+    if (loginLink) loginLink.style.display = 'inline-flex';
+  }
+
+  // Điền thông tin vào form
+  document.getElementById('f-username').value    = user.username || '';
+  document.getElementById('f-email').value       = user.email    || '';
+  document.getElementById('f-name').value        = user.name     || '';
+  document.getElementById('f-class').value       = user.class    || '';
+  document.getElementById('f-phone').value       = user.phone    || '';
+
+  var genderVal = (user.gender || 'nam').toLowerCase();
+  document.querySelectorAll('input[name="f-gender"]').forEach(function(r) {
+    r.checked = (r.value === genderVal);
+  });
+
+  // Mã độc giả luôn là SV + 4 số (tự động sinh nếu chưa hợp lệ)
+  const rawCode = (user.code || '').toString().toUpperCase();
+  const codeValue = /^SV\d{4}$/.test(rawCode)
+    ? rawCode
+    : 'SV' + Math.floor(1000 + Math.random()*9000);
+  document.getElementById('f-code').value         = codeValue;
+  document.getElementById('member-code-value').textContent = codeValue;
+
+  // Cập nhật lại trong session để giữ cố định mã nếu lần sau reload
+  user.code = codeValue;
+  sessionStorage.setItem('lib_user', JSON.stringify(user));
+
+  // Avatar từ sessionStorage
+  if (user.avatar) {
+    document.getElementById('avatar-img').src = user.avatar;
+    document.getElementById('avatar-img').style.display = 'block';
+    document.getElementById('avatar-placeholder').style.display = 'none';
+    // Nav avatar
+    var navAvt = document.getElementById('nav-avatar');
+    navAvt.innerHTML = '<img src="' + user.avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
+  }
+
+  // ── Dropdown ──
+  function toggleDropdown() {
+    var dd = document.getElementById('user-dropdown');
+    var btn = document.getElementById('nav-user-btn');
+    dd.classList.toggle('show');
+    btn.classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    var btn = document.getElementById('nav-user-btn');
+    var dd  = document.getElementById('user-dropdown');
+    if (btn && !btn.contains(e.target) && dd && !dd.contains(e.target)) {
+      dd.classList.remove('show');
+      btn.classList.remove('open');
+    }
+  });
+
+  // ── Avatar change ──
+  function changeAvatar(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var src = ev.target.result;
+      document.getElementById('avatar-img').src = src;
+      document.getElementById('avatar-img').style.display = 'block';
+      document.getElementById('avatar-placeholder').style.display = 'none';
+      // Update nav avatar
+      var navAvt = document.getElementById('nav-avatar');
+      navAvt.innerHTML = '<img src="' + src + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
+      // Save to session
+      user.avatar = src;
+      sessionStorage.setItem('lib_user', JSON.stringify(user));
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── Edit mode state ──
+  var isEditMode = false;
+  var passOpen = false;
+
+  function setEditMode(enable) {
+    isEditMode = !!enable;
+
+    // Toggle buttons
+    document.getElementById('btn-edit').style.display = isEditMode ? 'none' : 'inline-flex';
+    document.getElementById('edit-actions').style.display = isEditMode ? 'flex' : 'none';
+
+    // Toggle editable fields
+    ['f-username','f-name','f-email','f-class','f-phone'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.readOnly = !isEditMode;
+    });
+
+    // Toggle gender selection
+    document.querySelectorAll('input[name="f-gender"]').forEach(function(r){
+      r.disabled = !isEditMode;
+    });
+
+    // Add view-mode styling when not editing
+    var formCol = document.querySelector('.form-col');
+    if (formCol) {
+      if (isEditMode) formCol.classList.remove('view-mode');
+      else formCol.classList.add('view-mode');
+    }
+
+    // Reset password section when leaving edit mode
+    if (!isEditMode) {
+      closePassSection();
+      setTimeout(function() {
+        // Blur all inputs to remove focus highlight
+        document.querySelectorAll('.form-input').forEach(function(el) {
+          if (el.blur) el.blur();
+        });
+        // Remove any text selection highlight
+        if (window.getSelection) {
+          var sel = window.getSelection();
+          if (sel) sel.removeAllRanges();
+        }
+      }, 0);
+    }
+
+    updateSaveButtonState();
+  }
+
+  function enterEditMode() {
+    setEditMode(true);
+  }
+
+  function closePassSection() {
+    passOpen = false;
+    var pf = document.getElementById('pass-fields');
+    var ch = document.getElementById('pass-chevron');
+    var hdr = document.getElementById('pass-toggle');
+    pf.classList.add('hidden');
+    ch.style.transform = '';
+    hdr.classList.remove('open');
+    // Clear pass fields
+    ['f-oldpass','f-newpass','f-newpass2'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('pass-match-ok').style.display = 'none';
+    clearPassErrors();
+  }
+
+  function togglePassSection() {
+    if (!isEditMode) return;
+
+    if (passOpen) {
+      closePassSection();
+      return;
+    }
+
+    passOpen = true;
+    var pf = document.getElementById('pass-fields');
+    var ch = document.getElementById('pass-chevron');
+    var hdr = document.getElementById('pass-toggle');
+    pf.classList.remove('hidden');
+    ch.style.transform = 'rotate(180deg)';
+    hdr.classList.add('open');
+  }
+  function togglePassVis(id, el) {
+    var inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    el.textContent = inp.type === 'password' ? '👁' : '🙈';
+  }
+  function checkNewPassMatch() {
+    var p1 = document.getElementById('f-newpass').value;
+    var p2 = document.getElementById('f-newpass2').value;
+    var ok = document.getElementById('pass-match-ok');
+    if (p2.length > 0 && p1 === p2) {
+      ok.style.display = 'block';
+    } else {
+      ok.style.display = 'none';
+    }
+
+    updateSaveButtonState();
+  }
+  function clearPassErrors() {
+    ['err-oldpass','err-newpass','err-newpass2'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) { el.textContent=''; el.style.display='none'; }
+    });
+    document.getElementById('pass-match-ok').style.display='none';
+    updateSaveButtonState();
+  }
+
+  // Enable/disable save button based on edit mode
+  function updateSaveButtonState() {
+    var btn = document.getElementById('btn-save');
+    if (!btn) return;
+
+    // Allow clicking save while editing; validation happens on click
+    btn.disabled = !isEditMode;
+  }
+
+  // ── Save ──
+  function doSave() {
+    var name    = document.getElementById('f-name').value.trim();
+    var email   = document.getElementById('f-email').value.trim();
+    var clas    = document.getElementById('f-class').value.trim();
+    var phone   = document.getElementById('f-phone').value.trim();
+    var gender  = document.querySelector('input[name="f-gender"]:checked');
+    var genderVal = gender ? gender.value : 'nam';
+    var ok = true;
+    var toastMsg = '';
+
+    // Clear errors
+    ['fr-name','fr-email','fr-class','fr-phone'].forEach(function(id){
+      document.getElementById(id).classList.remove('has-error');
+    });
+    ['err-name','err-email','err-class','err-phone'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) { el.textContent=''; el.style.display='none'; }
+    });
+    clearPassErrors();
+
+    if (!name) { 
+      document.getElementById('fr-name').classList.add('has-error'); 
+      document.getElementById('err-name').textContent = 'Vui lòng nhập họ và tên.';
+      document.getElementById('err-name').style.display = 'block';
+      ok = false; 
+      toastMsg = toastMsg || 'Vui lòng nhập họ và tên.';
+    }
+
+    if (!email) {
+      document.getElementById('fr-email').classList.add('has-error');
+      document.getElementById('err-email').textContent = 'Vui lòng nhập email.';
+      document.getElementById('err-email').style.display = 'block';
+      ok = false;
+      toastMsg = toastMsg || 'Vui lòng nhập email.';
+    }
+
+    var username = document.getElementById('f-username').value.trim();
+    if (!username) {
+      document.getElementById('fr-username').classList.add('has-error');
+      ok = false;
+      toastMsg = toastMsg || 'Vui lòng nhập tên đăng nhập.';
+    }
+
+    if (!clas) {
+      document.getElementById('fr-class').classList.add('has-error');
+      document.getElementById('err-class').textContent = 'Vui lòng nhập lớp.';
+      document.getElementById('err-class').style.display = 'block';
+      ok = false;
+      toastMsg = toastMsg || 'Vui lòng nhập lớp.';
+    }
+
+    if (!phone) {
+      document.getElementById('fr-phone').classList.add('has-error');
+      document.getElementById('err-phone').textContent = 'Vui lòng nhập số điện thoại.';
+      document.getElementById('err-phone').style.display = 'block';
+      ok = false;
+      toastMsg = toastMsg || 'Vui lòng nhập số điện thoại.';
+    }
+
+    // Validate password if section open
+    if (passOpen) {
+      var oldp  = document.getElementById('f-oldpass').value;
+      var newp  = document.getElementById('f-newpass').value;
+      var newp2 = document.getElementById('f-newpass2').value;
+      if (newp || newp2) {
+        if (!newp || newp.length < 6) {
+          document.getElementById('err-newpass').textContent = 'Mật khẩu mới cần ít nhất 6 ký tự.';
+          document.getElementById('err-newpass').style.display = 'block';
+          ok = false;
+          toastMsg = toastMsg || 'Mật khẩu mới cần ít nhất 6 ký tự.';
+        }
+        if (newp !== newp2) {
+          document.getElementById('err-newpass2').textContent = 'Mật khẩu xác nhận không khớp.';
+          document.getElementById('err-newpass2').style.display = 'block';
+          ok = false;
+          toastMsg = toastMsg || 'Mật khẩu xác nhận không khớp.';
+        }
+        if (oldp && oldp !== (user.password || '123456')) {
+          document.getElementById('err-oldpass').textContent = 'Mật khẩu cũ không đúng.';
+          document.getElementById('err-oldpass').style.display = 'block';
+          ok = false;
+          toastMsg = toastMsg || 'Mật khẩu cũ không đúng.';
+        }
+      }
+    }
+
+    if (!ok) {
+      if (toastMsg) showToast(toastMsg, 'error');
+      return;
+    }
+
+    // Save to session
+    var oldUsername = user.username;
+    user.username = username;
+    user.name    = name;
+    user.email   = email;
+    user.class   = clas;
+    user.phone   = phone;
+    user.gender  = genderVal;
+
+    if (passOpen) {
+      var newpVal = document.getElementById('f-newpass').value;
+      if (newpVal) user.password = newpVal;
+    }
+
+    sessionStorage.setItem('lib_user', JSON.stringify(user));
+
+    // Persist to stored account if it exists (registered users)
+    if (oldUsername && oldUsername !== username) {
+      localStorage.removeItem('lib_user_' + oldUsername);
+    }
+    if (user.username) {
+      localStorage.setItem('lib_user_' + user.username, JSON.stringify(user));
+    }
+    if (user.email) {
+      localStorage.setItem('lib_user_' + user.email, JSON.stringify(user));
+      localStorage.setItem('lib_user_' + user.email.split('@')[0], JSON.stringify(user));
+    }
+
+    setEditMode(false);
+    showToast('✓ Lưu thông tin thành công!', 'success');
+  }
+
+  // ── Cancel ──
+  function doCancel() {
+    document.getElementById('f-username').value = user.username || '';
+    document.getElementById('f-name').value    = user.name    || '';
+    document.getElementById('f-email').value   = user.email   || '';
+    document.getElementById('f-class').value   = user.class   || '';
+    document.getElementById('f-phone').value   = user.phone   || '';
+    document.querySelectorAll('input[name="f-gender"]').forEach(function(r) {
+      r.checked = (r.value === (user.gender || 'nam'));
+    });
+
+    document.getElementById('fr-name').classList.remove('has-error');
+    if (passOpen) togglePassSection();
+
+    setEditMode(false);
+    showToast('Đã hủy thay đổi.', '');
+  }
+
+  // ── Logout ──
+  function doLogout() {
+    // Clear session and remember-me so user is fully logged out
+    sessionStorage.removeItem('lib_user');
+    localStorage.removeItem('lib_user_remember');
+
+    // Redirect back to homepage
+    window.location.href = 'index.html';
+  }
+
+  // ── Toast ──
+  function showToast(msg, type) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (type ? ' ' + type : '');
+    setTimeout(function() { t.classList.remove('show'); }, 3000);
+  }
+
+  // Initialize view mode
+  setEditMode(false);
+</script>
+</body>
+</html>
