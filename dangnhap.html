@@ -226,9 +226,9 @@
     <div id="login-success" class="success-msg">Đăng nhập thành công! Đang chuyển hướng...</div>
 
     <div class="field" id="field-login-user">
-      <label>Tên đăng nhập/ Email</label>
-      <input type="text" id="login-user" placeholder="" />
-      <div class="err-msg">Vui lòng nhập tên đăng nhập hoặc email.</div>
+      <label>Email <span class="req">(*)</span></label>
+      <input type="email" id="login-user" placeholder="example@email.com" />
+      <div class="err-msg">Vui lòng nhập địa chỉ email.</div>
     </div>
 
     <div class="field" id="field-login-pass">
@@ -377,25 +377,19 @@
 
       <div class="field" id="field-reg-email">
         <label>Email <span class="req">(*)</span></label>
-        <input type="email" id="reg-email" />
+        <input type="email" id="reg-email" placeholder="example@email.com" />
         <div class="err-msg">Vui lòng nhập email hợp lệ.</div>
-      </div>
-
-      <div class="field" id="field-reg-username">
-        <label>Tên đăng nhập <span class="req">(*)</span></label>
-        <input type="text" id="reg-username" />
-        <div class="err-msg">Vui lòng nhập tên đăng nhập (ít nhất 4 ký tự).</div>
       </div>
 
       <div class="field" id="field-reg-pass">
         <label>Mật khẩu <span class="req">(*)</span></label>
-        <input type="password" id="reg-pass" />
+        <input type="password" id="reg-pass" placeholder="Ít nhất 6 ký tự" />
         <div class="err-msg">Mật khẩu cần ít nhất 6 ký tự.</div>
       </div>
 
       <div class="field" id="field-reg-pass2">
         <label>Xác nhận mật khẩu <span class="req">(*)</span></label>
-        <input type="password" id="reg-pass2" />
+        <input type="password" id="reg-pass2" placeholder="Nhập lại mật khẩu" />
         <div class="err-msg">Mật khẩu xác nhận không khớp.</div>
       </div>
 
@@ -408,18 +402,22 @@
           <label class="radio-label">
             <input type="radio" name="gender" value="nu" /> Nữ
           </label>
+          <label class="radio-label">
+            <input type="radio" name="gender" value="khac" /> Khác
+          </label>
         </div>
       </div>
 
       <div class="field" id="field-reg-class">
-        <label>Lớp</label>
-        <input type="text" id="reg-class" />
+        <label>Lớp <span class="req">(*)</span></label>
+        <input type="text" id="reg-class" placeholder="Ví dụ: K58CN" />
+        <div class="err-msg">Vui lòng nhập lớp của bạn.</div>
       </div>
 
       <div class="field" id="field-reg-phone">
-        <label>Số điện thoại</label>
-        <input type="tel" id="reg-phone" />
-        <div class="err-msg">Số điện thoại không hợp lệ.</div>
+        <label>Số điện thoại <span class="req">(*)</span></label>
+        <input type="tel" id="reg-phone" placeholder="0123 456 789" />
+        <div class="err-msg">Vui lòng nhập số điện thoại hợp lệ (8–15 số).</div>
       </div>
 
       <button class="btn-submit" onclick="doRegister()">Đăng ký</button>
@@ -466,59 +464,47 @@
 
   // === ĐĂNG NHẬP ===
   function doLogin() {
-    var username = document.getElementById('login-user').value.trim();
-    var pass     = document.getElementById('login-pass').value.trim();
+    var email = document.getElementById('login-user').value.trim();
+    var pass  = document.getElementById('login-pass').value.trim();
     var ok = true;
 
     clearErrors();
-    if (!username) { setError('field-login-user'); ok = false; }
-    if (!pass)     { setError('field-login-pass'); ok = false; }
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) { setError('field-login-user'); ok = false; }
+    if (!pass)                             { setError('field-login-pass'); ok = false; }
     if (!ok) return;
 
-    // Nếu tài khoản đã được đăng ký, dùng lại thông tin đã lưu (kể cả họ tên)
     function getStoredUser(key) {
       var item = localStorage.getItem('lib_user_' + key);
       if (!item) return null;
       try { return JSON.parse(item); } catch(e) { return null; }
     }
 
-    var stored = getStoredUser(username);
-    if (!stored && username.indexOf('@') > -1) {
-      // Nếu đăng nhập bằng email, thử lấy theo phần trước @
-      var localPart = username.split('@')[0];
-      stored = getStoredUser(localPart);
-      // Nếu tìm thấy, đảm bảo dùng email chính xác
-      if (stored && stored.email !== username) stored.email = username;
-    }
+    var stored = getStoredUser(email);
 
     var userData;
     if (stored) {
-      // Kiểm tra mật khẩu
       if (stored.password !== pass) {
         setError('field-login-pass');
         return;
       }
       userData = stored;
     } else {
-      // Tạo user tạm (chưa đăng ký) nhưng vẫn cho vào session và lưu luôn để giữ mã cố định
+      // Tạo user tạm nếu chưa đăng ký
       userData = {
-        username: username,
-        email:    username.indexOf('@') > -1 ? username : username + '@library.edu.vn',
-        name:     username,          // user có thể cập nhật tên thật ở trang cá nhân
-        contact:  username.indexOf('@') > -1 ? username : '',
+        username: email,
+        email:    email,
+        name:     email.split('@')[0],
+        contact:  email,
         password: pass,
         code:     'SV' + String(Math.floor(1000 + Math.random()*9000)).substring(0,4),
         avatar:   ''
       };
-
-      localStorage.setItem('lib_user_' + username, JSON.stringify(userData));
-      localStorage.setItem('lib_user_' + userData.email, JSON.stringify(userData));
-      localStorage.setItem('lib_user_' + userData.email.split('@')[0], JSON.stringify(userData));
+      localStorage.setItem('lib_user_' + email, JSON.stringify(userData));
     }
 
     sessionStorage.setItem('lib_user', JSON.stringify(userData));
 
-    // Show success feedback rồi chuyển sang trang cá nhân
     var msg = document.getElementById('login-success');
     msg.style.display = 'block';
     setTimeout(function() {
@@ -664,33 +650,30 @@
     clearErrors();
     var name     = document.getElementById('reg-name').value.trim();
     var email    = document.getElementById('reg-email').value.trim();
-    var username = document.getElementById('reg-username').value.trim();
     var pass     = document.getElementById('reg-pass').value;
     var pass2    = document.getElementById('reg-pass2').value;
+    var clas     = document.getElementById('reg-class').value.trim();
     var phone    = document.getElementById('reg-phone').value.trim();
+    var gender   = document.querySelector('input[name="gender"]:checked').value;
     var ok = true;
 
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!name)                         { setError('field-reg-name');     ok = false; }
-    if (!email || !emailRegex.test(email)) { setError('field-reg-email'); ok = false; }
-    if (!username || username.length < 4) { setError('field-reg-username'); ok = false; }
-    if (!pass || pass.length < 6)      { setError('field-reg-pass');     ok = false; }
-    if (pass !== pass2)                { setError('field-reg-pass2');    ok = false; }
-    if (phone && !/^[0-9+\-\s]{8,15}$/.test(phone)) { setError('field-reg-phone'); ok = false; }
+    if (!name)                              { setError('field-reg-name');     ok = false; }
+    if (!email || !emailRegex.test(email))  { setError('field-reg-email');    ok = false; }
+    if (!pass || pass.length < 6)           { setError('field-reg-pass');     ok = false; }
+    if (pass !== pass2)                     { setError('field-reg-pass2');    ok = false; }
+    if (!clas)                              { setError('field-reg-class');    ok = false; }
+    if (!phone || !/^[0-9+\-\s]{8,15}$/.test(phone)) { setError('field-reg-phone'); ok = false; }
 
     if (!ok) return;
 
     var msg = document.getElementById('register-success');
     msg.style.display = 'block';
 
-    // Lưu thông tin đăng ký để đăng nhập hiển thị tên thật
-    var gender = document.querySelector('input[name="gender"]:checked').value;
-    var clas = document.getElementById('reg-class').value.trim();
-    var phone = document.getElementById('reg-phone').value.trim();
-
+    // Lưu thông tin đăng ký (dùng email làm khóa chính)
     var registeredUser = {
-      username: username,
+      username: email,
       email:    email,
       name:     name,
       contact:  email,
@@ -702,13 +685,10 @@
       avatar:   '',
       remember: false
     };
-    localStorage.setItem('lib_user_' + username, JSON.stringify(registeredUser));
-    // Hỗ trợ đăng nhập bằng email (nếu user dùng email làm username)
     localStorage.setItem('lib_user_' + email, JSON.stringify(registeredUser));
-    localStorage.setItem('lib_user_' + email.split('@')[0], JSON.stringify(registeredUser));
 
     // Reset form
-    ['reg-name','reg-email','reg-username','reg-pass','reg-pass2','reg-class','reg-phone'].forEach(function(id){
+    ['reg-name','reg-email','reg-pass','reg-pass2','reg-class','reg-phone'].forEach(function(id){
       document.getElementById(id).value = '';
     });
 
