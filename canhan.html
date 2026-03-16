@@ -137,8 +137,7 @@
       letter-spacing: 0.8px;
     }
 
-    /* Hide the original code input row since the code is shown prominently */
-    #fr-code { display: none; }
+
 
     /* Avatar column */
     .avatar-col { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -340,7 +339,7 @@
   <div class="nav-right">
     <a href="dangnhap.html" class="btn-login" id="login-link" style="display:none;">Đăng nhập</a>
 
-    <div id="profile-block" style="position:relative; display:none;">
+    <div id="profile-block" style="position:relative; display:inline-flex;">
       <button class="nav-user-btn" id="nav-user-btn" onclick="toggleDropdown()">
         <div class="user-icon" id="nav-avatar">
           <svg viewBox="0 0 24 24" fill="none" stroke="#3a9ad9" stroke-width="1.8">
@@ -388,12 +387,7 @@
     <div class="form-col">
       <div class="member-code">
         <span class="member-code-label">Mã độc giả</span>
-        <span class="member-code-value" id="member-code-value">PM0102</span>
-      </div>
-
-      <div class="form-row" id="fr-username">
-        <label class="form-label">Tên đăng nhập</label>
-        <input type="text" class="form-input" id="f-username" autocomplete="off" readonly />
+        <span class="member-code-value" id="member-code-value"></span>
       </div>
 
       <div class="form-row" id="fr-email">
@@ -403,7 +397,7 @@
       </div>
 
       <div class="form-row" id="fr-name">
-        <label class="form-label">Họ và tên <span class="req">*</span></label>
+        <label class="form-label">Họ tên </label>
         <input type="text" class="form-input" id="f-name" autocomplete="off" placeholder="PHẠM YÊN NHI" readonly oninput="updateSaveButtonState()" />
         <div class="field-err" id="err-name"></div>
       </div>
@@ -429,11 +423,6 @@
         <div class="field-err" id="err-phone"></div>
       </div>
 
-      <div class="form-row" id="fr-code">
-        <label class="form-label">Mã độc giả <span class="req">*</span></label>
-        <input type="text" class="form-input" id="f-code" autocomplete="off" placeholder="SV0123" readonly />
-        <div class="field-err"></div>
-      </div>
 
       <!-- Thay mật khẩu toggle -->
       <div class="form-row">
@@ -489,7 +478,7 @@
     <table class="footer-table">
       <tr><td>Địa chỉ:</td><td>Hồ Tùng Mậu, Từ Liêm, Hà Nội, Việt Nam</td></tr>
       <tr><td>Điện thoại:</td><td>(84)24.12.345.678</td></tr>
-      <tr><td>Email:</td><td>libuniversity@gmail.com</td></tr>
+      <tr><td>Email:</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b2dedbd0c7dcdbc4d7c0c1dbc6cbf2d5dfd3dbde9cd1dddf">[email&#160;protected]</a></td></tr>
     </table>
   </div>
   <div class="footer-col">
@@ -530,7 +519,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // ── Đọc thông tin user từ sessionStorage ──
   var user = JSON.parse(sessionStorage.getItem('lib_user') || 'null');
   if (!user) {
@@ -550,7 +539,6 @@
   }
 
   // Điền thông tin vào form
-  document.getElementById('f-username').value    = user.username || '';
   document.getElementById('f-email').value       = user.email    || '';
   document.getElementById('f-name').value        = user.name     || '';
   document.getElementById('f-class').value       = user.class    || '';
@@ -566,7 +554,6 @@
   const codeValue = /^SV\d{4}$/.test(rawCode)
     ? rawCode
     : 'SV' + Math.floor(1000 + Math.random()*9000);
-  document.getElementById('f-code').value         = codeValue;
   document.getElementById('member-code-value').textContent = codeValue;
 
   // Cập nhật lại trong session để giữ cố định mã nếu lần sau reload
@@ -631,7 +618,7 @@
     document.getElementById('edit-actions').style.display = isEditMode ? 'flex' : 'none';
 
     // Toggle editable fields
-    ['f-username','f-name','f-email','f-class','f-phone'].forEach(function(id){
+    ['f-name','f-email','f-class','f-phone'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.readOnly = !isEditMode;
     });
@@ -773,13 +760,6 @@
       toastMsg = toastMsg || 'Vui lòng nhập email.';
     }
 
-    var username = document.getElementById('f-username').value.trim();
-    if (!username) {
-      document.getElementById('fr-username').classList.add('has-error');
-      ok = false;
-      toastMsg = toastMsg || 'Vui lòng nhập tên đăng nhập.';
-    }
-
     if (!clas) {
       document.getElementById('fr-class').classList.add('has-error');
       document.getElementById('err-class').textContent = 'Vui lòng nhập lớp.';
@@ -829,8 +809,6 @@
     }
 
     // Save to session
-    var oldUsername = user.username;
-    user.username = username;
     user.name    = name;
     user.email   = email;
     user.class   = clas;
@@ -844,13 +822,6 @@
 
     sessionStorage.setItem('lib_user', JSON.stringify(user));
 
-    // Persist to stored account if it exists (registered users)
-    if (oldUsername && oldUsername !== username) {
-      localStorage.removeItem('lib_user_' + oldUsername);
-    }
-    if (user.username) {
-      localStorage.setItem('lib_user_' + user.username, JSON.stringify(user));
-    }
     if (user.email) {
       localStorage.setItem('lib_user_' + user.email, JSON.stringify(user));
       localStorage.setItem('lib_user_' + user.email.split('@')[0], JSON.stringify(user));
@@ -862,7 +833,6 @@
 
   // ── Cancel ──
   function doCancel() {
-    document.getElementById('f-username').value = user.username || '';
     document.getElementById('f-name').value    = user.name    || '';
     document.getElementById('f-email').value   = user.email   || '';
     document.getElementById('f-class').value   = user.class   || '';
@@ -893,11 +863,12 @@
     var t = document.getElementById('toast');
     t.textContent = msg;
     t.className = 'toast show' + (type ? ' ' + type : '');
-    setTimeout(function() { t.classList.remove('show'); }, 3000);
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function() {
+      t.classList.remove('show');
+    }, 2800);
   }
 
-  // Initialize view mode
-  setEditMode(false);
 </script>
 </body>
 </html>
