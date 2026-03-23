@@ -48,30 +48,59 @@
     .search-top { padding: 0 60px; display: flex; justify-content: center; max-width: 900px; margin: 0 auto; }
     .search-bar-top { display: flex; align-items: center; background: #fff; border-radius: 10px; overflow: visible; box-shadow: 0 2px 12px rgba(0,0,0,0.10); width: 100%; max-width: 860px; border: 2px solid #3a9ad9; }
 
-    /* Select bộ lọc – dùng <select> native đơn giản, không custom */
-    .search-select-top {
-      height: 50px; padding: 0 36px 0 14px; border: none; outline: none;
-      background: #fff; font-family: inherit; font-size: 14px; font-weight: 600;
-      color: #3a9ad9; border-right: 2px solid #3a9ad9;
-      cursor: pointer; appearance: none; -webkit-appearance: none;
-      flex-shrink: 0; min-width: 150px; border-radius: 8px 0 0 8px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233a9ad9' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 12px center; background-color: #fff;
+    /* ── CUSTOM FILTER DROPDOWN ── */
+    .filter-wrap {
+      position: relative; height: 50px; flex-shrink: 0;
+      border-right: 2px solid #3a9ad9;
     }
+    .filter-btn {
+      height: 50px; padding: 0 14px 0 12px;
+      display: flex; align-items: center; gap: 8px;
+      background: #fff; border: none; cursor: pointer;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      color: #3a9ad9; min-width: 140px;
+      border-radius: 8px 0 0 8px;
+      user-select: none;
+    }
+    .filter-btn:hover { background: #f0f6fb; }
+    .filter-btn .fb-label { flex: 1; text-align: left; }
+    .filter-btn .fb-chevron { font-size: 10px; color: #3a9ad9; transition: transform .2s; }
+    .filter-btn.open .fb-chevron { transform: rotate(180deg); }
+    .filter-main-panel {
+      display: none; position: fixed;
+      background: #fff; border-radius: 10px; min-width: 200px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 9999;
+      border: 1px solid #e0eaf4; overflow: hidden;
+    }
+    .filter-main-panel.open { display: block; animation: dropIn .15s ease; }
+    .fmp-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 16px; font-size: 14px; font-weight: 500;
+      color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap;
+    }
+    .fmp-item:hover { background: #eaf4fd; color: #3a9ad9; }
+    .fmp-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
+    .fmp-item .fmp-check { margin-left: auto; font-size: 13px; color: #3a9ad9; }
+    .fmp-item .fmp-arrow { margin-left: auto; font-size: 11px; color: #aaa; }
     .search-input-top { flex: 1; height: 50px; border: none; outline: none; padding: 0 18px; font-family: inherit; font-size: 15px; color: #333; }
     .search-btn-top { width: 60px; height: 50px; background: #3a9ad9; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; flex-shrink: 0; border-radius: 0 8px 8px 0; }
     .search-btn-top:hover { background: #2b7eb8; }
 
-    /* Genre dropdown – position:fixed qua JS */
-    .genre-panel {
+    /* Genre sub-panel */
+    .genre-sub-panel {
       display: none; position: fixed;
       background: #fff; border-radius: 10px; min-width: 210px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.18); z-index: 9999;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 10000;
       border: 1px solid #e0eaf4; overflow: hidden;
     }
-    .genre-panel.open { display: block; animation: dropIn .15s ease; }
-    .genre-item { padding: 11px 18px; font-size: 14px; font-weight: 500; color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap; }
-    .genre-item:hover, .genre-item.active { background: #3a9ad9; color: #fff; }
+    .genre-sub-panel.open { display: block; animation: dropIn .15s ease; }
+    .genre-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 11px 18px; font-size: 14px; font-weight: 500;
+      color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap;
+    }
+    .genre-item:hover { background: #eaf4fd; color: #3a9ad9; }
+    .genre-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
 
     /* MAIN */
     .main { padding: 32px 60px 60px; }
@@ -156,20 +185,39 @@
 <!-- SEARCH BAR -->
 <div class="search-top">
   <div class="search-bar-top">
-    <select class="search-select-top" id="searchSelect" onchange="onFilterChange(this.value)">
-      <option value="all">Tất cả</option>
-      <option value="title">Tên sách</option>
-      <option value="author">Tác giả/NXB</option>
-      <option value="genre">Thể loại</option>
-    </select>
-    <!-- Genre dropdown – fixed positioning qua JS -->
-    <div class="genre-panel" id="genrePanel">
-      <div class="genre-item" onclick="pickGenre('Giáo trình')">Giáo trình</div>
-      <div class="genre-item" onclick="pickGenre('Sách tham khảo')">Sách tham khảo</div>
-      <div class="genre-item" onclick="pickGenre('Tài liệu ôn thi')">Tài liệu ôn thi</div>
-      <div class="genre-item" onclick="pickGenre('Nghiên cứu khoa học')">Nghiên cứu khoa học</div>
-      <div class="genre-item" onclick="pickGenre('Sách bài tập')">Sách bài tập</div>
-      <div class="genre-item" onclick="pickGenre('Khác')">Khác</div>
+    <div class="filter-wrap" id="filterWrap">
+      <button class="filter-btn" id="filterBtn" onclick="toggleFilterPanel(event)">
+        <span class="fb-label" id="fbLabel">Tất cả</span>
+        <span class="fb-chevron" id="fbChevron">▼</span>
+      </button>
+      <div class="filter-main-panel" id="filterMainPanel">
+        <div class="fmp-item active" id="fmp-all" onclick="selectFilter('all',event)">
+          <span>Tất cả</span><span class="fmp-check" id="chk-all">✓</span>
+        </div>
+        <div class="fmp-item" id="fmp-title" onclick="selectFilter('title',event)">
+          <span>Tên sách</span><span class="fmp-check" id="chk-title" style="display:none">✓</span>
+        </div>
+        <div class="fmp-item" id="fmp-genre" onclick="openGenrePanel(event)">
+          <span>Thể loại</span><span class="fmp-check" id="chk-genre" style="display:none">✓</span>
+        </div>
+        <div class="fmp-item" id="fmp-author" onclick="selectFilter('author',event)">
+          <span>Tác giả/ NXB</span><span class="fmp-check" id="chk-author" style="display:none">✓</span>
+        </div>
+      </div>
+      <div class="genre-sub-panel" id="genrePanel">
+        <div class="genre-item" onclick="pickGenre('Giáo trình')">Giáo trình</div>
+        <div class="genre-item" onclick="pickGenre('Sách tham khảo')">Sách tham khảo</div>
+        <div class="genre-item" onclick="pickGenre('Tài liệu ôn thi')">Tài liệu ôn thi</div>
+        <div class="genre-item" onclick="pickGenre('Nghiên cứu khoa học')">Nghiên cứu khoa học</div>
+        <div class="genre-item" onclick="pickGenre('Sách bài tập')">Sách bài tập</div>
+        <div class="genre-item" onclick="pickGenre('Khác')">Khác</div>
+      </div>
+      <select id="searchSelect" style="display:none">
+        <option value="all">Tất cả</option>
+        <option value="title">Tên sách</option>
+        <option value="author">Tác giả/NXB</option>
+        <option value="genre">Thể loại</option>
+      </select>
     </div>
     <input type="text" class="search-input-top" id="searchInput" placeholder="Nhập từ khóa tìm kiếm..." />
     <button class="search-btn-top" onclick="doSearch()">
@@ -245,9 +293,29 @@
   // ── Điền lại search bar từ URL ──
   document.getElementById('searchInput').value = currentQuery;
   var sel = document.getElementById('searchSelect');
-  for (var i = 0; i < sel.options.length; i++) {
-    if (sel.options[i].value === currentFilter) { sel.selectedIndex = i; break; }
+  if (sel) {
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === currentFilter) { sel.selectedIndex = i; break; }
+    }
   }
+  // Đồng bộ custom filter button
+  (function() {
+    var labels = { all:'Tất cả', title:'Tên sách', author:'Tác giả/ NXB', genre:'Thể loại' };
+    var lbl = document.getElementById('fbLabel');
+    if (lbl) {
+      lbl.textContent = labels[currentFilter] || 'Tất cả';
+    }
+    ['all','title','author'].forEach(function(k) {
+      var el = document.getElementById('chk-' + k);
+      if (el) el.style.display = (k === currentFilter) ? 'inline' : 'none';
+    });
+    ['fmp-all','fmp-title','fmp-author','fmp-genre'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+    var active = document.getElementById('fmp-' + currentFilter);
+    if (active) active.classList.add('active');
+  })();
 
   // ── Tìm kiếm ──
   var filterLabel = { all: 'Tất cả', title: 'Tên sách', author: 'Tác giả/NXB', genre: 'Thể loại' };
@@ -331,30 +399,91 @@
     if (e.key === 'Enter') doSearch();
   });
 
-  // ── Genre dropdown ──
-  function onFilterChange(val) {
-    var panel = document.getElementById('genrePanel');
-    if (val === 'genre') {
-      var rect = document.getElementById('searchSelect').getBoundingClientRect();
-      panel.style.top  = (rect.bottom + 6) + 'px';
-      panel.style.left = rect.left + 'px';
-      panel.classList.add('open');
-    } else {
-      panel.classList.remove('open');
+  // ── Custom filter dropdown ──
+  var _currentFilter = 'all';
+  function _closeAllPanels() {
+    var mp = document.getElementById('filterMainPanel');
+    var gp = document.getElementById('genrePanel');
+    var fb = document.getElementById('filterBtn');
+    if (mp) mp.classList.remove('open');
+    if (gp) gp.classList.remove('open');
+    if (fb) fb.classList.remove('open');
+  }
+  function toggleFilterPanel(e) {
+    if (e) e.stopPropagation();
+    var mp = document.getElementById('filterMainPanel');
+    var fb = document.getElementById('filterBtn');
+    if (!mp) return;
+    var isOpen = mp.classList.contains('open');
+    _closeAllPanels();
+    if (!isOpen) {
+      var rect = fb.getBoundingClientRect();
+      mp.style.top  = (rect.bottom + 4) + 'px';
+      mp.style.left = rect.left + 'px';
+      mp.classList.add('open');
+      fb.classList.add('open');
     }
   }
-
-  function pickGenre(name) {
-    document.getElementById('searchInput').value = name;
-    document.getElementById('genrePanel').classList.remove('open');
-    window.location.href = 'timkiem.html?q=' + encodeURIComponent(name) + '&filter=genre';
+  function selectFilter(val, e) {
+    if (e) e.stopPropagation();
+    _currentFilter = val;
+    var labels = { all:'Tất cả', title:'Tên sách', author:'Tác giả/ NXB', genre:'Thể loại' };
+    document.getElementById('fbLabel').textContent = labels[val] || 'Tất cả';
+    var sel = document.getElementById('searchSelect');
+    if (sel) sel.value = val;
+    ['all','title','author','genre'].forEach(function(k) {
+      var el = document.getElementById('chk-' + k);
+      if (el) el.style.display = (k === val) ? 'inline' : 'none';
+    });
+    ['fmp-all','fmp-title','fmp-author','fmp-genre'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+    var active = document.getElementById('fmp-' + val);
+    if (active) active.classList.add('active');
+    _closeAllPanels();
+    // re-render với filter mới
+    render(currentQuery, val);
   }
-
+  function openGenrePanel(e) {
+    if (e) e.stopPropagation();
+    var gp  = document.getElementById('genrePanel');
+    var mp  = document.getElementById('filterMainPanel');
+    var fb  = document.getElementById('filterBtn');
+    if (!gp) return;
+    // Lấy tọa độ từ filterMainPanel nếu đang hiện, không thì từ filterBtn
+    var anchor = (mp && mp.classList.contains('open')) ? mp : fb;
+    var rect = anchor ? anchor.getBoundingClientRect() : {top:60, right:200};
+    gp.style.top  = rect.top + 'px';
+    gp.style.left = (rect.right + 4) + 'px';
+    gp.classList.add('open');
+  }
+  function pickGenre(name) {
+    _currentFilter = 'genre';
+    document.getElementById('fbLabel').textContent = 'Thể loại';
+    var sel = document.getElementById('searchSelect');
+    if (sel) sel.value = 'genre';
+    document.getElementById('searchInput').value = name;
+    ['all','title','author','genre'].forEach(function(k) {
+      var el = document.getElementById('chk-' + k);
+      if (el) el.style.display = (k === 'genre') ? 'inline' : 'none';
+    });
+    ['fmp-all','fmp-title','fmp-author'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+    var fg = document.getElementById('fmp-genre');
+    if (fg) fg.classList.add('active');
+    document.querySelectorAll('.genre-item').forEach(function(el) {
+      el.classList.toggle('active', el.textContent.trim() === name);
+    });
+    _closeAllPanels();
+  }
   document.addEventListener('click', function(e) {
-    var panel = document.getElementById('genrePanel');
-    var sel   = document.getElementById('searchSelect');
-    if (panel && sel && !panel.contains(e.target) && e.target !== sel) {
-      panel.classList.remove('open');
+    var wrap = document.getElementById('filterWrap');
+    var gp   = document.getElementById('genrePanel');
+    if (wrap && !wrap.contains(e.target) && gp && !gp.contains(e.target)) {
+      _closeAllPanels();
     }
   });
 
