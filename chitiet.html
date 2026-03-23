@@ -238,21 +238,53 @@
       border-bottom: 1px solid #3a9ad9;
     }
 
-    /* ── GENRE DROPDOWN ── */
-    .search-filter-wrap { position: relative; height: 50px; flex-shrink: 0; border-right: 2px solid #3a9ad9; }
-    .genre-panel {
-      display: none; position: fixed; top: calc(100% + 6px); left: 0;
-      background: #fff; border-radius: 10px; min-width: 210px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.14); z-index: 9999;
+    /* ── CUSTOM FILTER DROPDOWN ── */
+    .filter-wrap {
+      position: relative; height: 50px; flex-shrink: 0;
+      border-right: 2px solid #3a9ad9;
+    }
+    .filter-btn {
+      height: 50px; padding: 0 14px 0 12px;
+      display: flex; align-items: center; gap: 8px;
+      background: #fff; border: none; cursor: pointer;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      color: #3a9ad9; min-width: 140px;
+      border-radius: 8px 0 0 8px; user-select: none;
+    }
+    .filter-btn:hover { background: #f0f6fb; }
+    .filter-btn .fb-label { flex: 1; text-align: left; }
+    .filter-btn .fb-chevron { font-size: 10px; color: #3a9ad9; transition: transform .2s; }
+    .filter-btn.open .fb-chevron { transform: rotate(180deg); }
+    .filter-main-panel {
+      display: none; position: fixed;
+      background: #fff; border-radius: 10px; min-width: 200px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 9999;
       border: 1px solid #e0eaf4; overflow: hidden;
-      animation: dropIn .15s ease;
     }
-    .genre-panel.open { display: block; }
+    .filter-main-panel.open { display: block; animation: dropIn .15s ease; }
+    .fmp-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 16px; font-size: 14px; font-weight: 500;
+      color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap;
+    }
+    .fmp-item:hover { background: #eaf4fd; color: #3a9ad9; }
+    .fmp-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
+    .fmp-item .fmp-check { margin-left: auto; font-size: 13px; color: #3a9ad9; }
+    .fmp-item .fmp-arrow { margin-left: auto; font-size: 11px; color: #aaa; }
+    .genre-sub-panel {
+      display: none; position: fixed;
+      background: #fff; border-radius: 10px; min-width: 210px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 10000;
+      border: 1px solid #e0eaf4; overflow: hidden;
+    }
+    .genre-sub-panel.open { display: block; animation: dropIn .15s ease; }
     .genre-item {
-      padding: 11px 18px; font-size: 14px; font-weight: 500; color: #1a1a2e;
-      cursor: pointer; transition: background .15s; white-space: nowrap;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 11px 18px; font-size: 14px; font-weight: 500;
+      color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap;
     }
-    .genre-item:hover, .genre-item.active { background: #3a9ad9; color: #fff; }
+    .genre-item:hover { background: #eaf4fd; color: #3a9ad9; }
+    .genre-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -314,14 +346,26 @@
 <!-- SEARCH BAR -->
 <div class="search-top">
   <div class="search-bar-top">
-    <div class="search-filter-wrap">
-      <select class="search-select-top" id="searchSelect" onchange="onFilterChange(this.value)">
-        <option value="title">Tên sách</option>
-        <option value="author">Tác giả</option>
-        <option value="genre">Thể loại</option>
-        <option value="all">Tất cả</option>
-      </select>
-      <div class="genre-panel" id="genrePanel">
+    <div class="filter-wrap" id="filterWrap">
+      <button class="filter-btn" id="filterBtn" onclick="toggleFilterPanel(event)">
+        <span class="fb-label" id="fbLabel">Tất cả</span>
+        <span class="fb-chevron" id="fbChevron">▼</span>
+      </button>
+      <div class="filter-main-panel" id="filterMainPanel">
+        <div class="fmp-item active" id="fmp-all" onclick="selectFilter('all',event)">
+          <span>Tất cả</span><span class="fmp-check" id="chk-all">✓</span>
+        </div>
+        <div class="fmp-item" id="fmp-title" onclick="selectFilter('title',event)">
+          <span>Tên sách</span><span class="fmp-check" id="chk-title" style="display:none">✓</span>
+        </div>
+        <div class="fmp-item" id="fmp-genre" onclick="openGenrePanel(event)">
+          <span>Thể loại</span><span class="fmp-check" id="chk-genre" style="display:none">✓</span>
+        </div>
+        <div class="fmp-item" id="fmp-author" onclick="selectFilter('author',event)">
+          <span>Tác giả/ NXB</span><span class="fmp-check" id="chk-author" style="display:none">✓</span>
+        </div>
+      </div>
+      <div class="genre-sub-panel" id="genrePanel">
         <div class="genre-item" onclick="pickGenre('Giáo trình')">Giáo trình</div>
         <div class="genre-item" onclick="pickGenre('Sách tham khảo')">Sách tham khảo</div>
         <div class="genre-item" onclick="pickGenre('Tài liệu ôn thi')">Tài liệu ôn thi</div>
@@ -329,6 +373,12 @@
         <div class="genre-item" onclick="pickGenre('Sách bài tập')">Sách bài tập</div>
         <div class="genre-item" onclick="pickGenre('Khác')">Khác</div>
       </div>
+      <select id="searchSelect" style="display:none">
+        <option value="all">Tất cả</option>
+        <option value="title">Tên sách</option>
+        <option value="author">Tác giả/NXB</option>
+        <option value="genre">Thể loại</option>
+      </select>
     </div>
     <input type="text" class="search-input-top" id="searchInput" placeholder="Nhập từ khóa tìm kiếm..." />
     <button class="search-btn-top" onclick="doSearch()">
@@ -413,9 +463,34 @@
     // Set page title
     document.title = book.title + ' – Library University';
 
-    // Pre-fill search bar only if URL contains a query param (search performed)
-    var querySearch = params.get('q') || '';
+    // Đồng bộ thanh tìm kiếm: điền từ khóa và filter từ URL
+    var querySearch  = params.get('q')      || '';
+    var filterSearch = params.get('filter') || 'all';
     document.getElementById('searchInput').value = querySearch;
+    var selEl = document.getElementById('searchSelect');
+    if (selEl) {
+      for (var i = 0; i < selEl.options.length; i++) {
+        if (selEl.options[i].value === filterSearch) { selEl.selectedIndex = i; break; }
+      }
+    }
+    // Đồng bộ custom filter button
+    (function() {
+      var labels = { all:'Tất cả', title:'Tên sách', author:'Tác giả/ NXB', genre:'Thể loại' };
+      var lbl = document.getElementById('fbLabel');
+      if (lbl) {
+        lbl.textContent = labels[filterSearch] || 'Tất cả';
+      }
+      ['all','title','author'].forEach(function(k) {
+        var el = document.getElementById('chk-' + k);
+        if (el) el.style.display = (k === filterSearch) ? 'inline' : 'none';
+      });
+      ['fmp-all','fmp-title','fmp-author','fmp-genre'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      var active = document.getElementById('fmp-' + filterSearch);
+      if (active) active.classList.add('active');
+    })();
 
     const imgHtml = book.image
       ? `<img src="${book.image}" alt="${book.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="book-cover-placeholder-detail" style="display:none;background:linear-gradient(160deg,#1a2a4a,#2e5090);">${book.title}</div>`
@@ -489,28 +564,92 @@
     renderNotFound();
   }
 
-  function onFilterChange(val) {
-    var panel = document.getElementById('genrePanel');
-    if (val === 'genre') {
-      var sel = document.getElementById('searchSelect');
-      var rect = sel.getBoundingClientRect();
-      panel.style.top  = (rect.bottom + 6) + 'px';
-      panel.style.left = rect.left + 'px';
-      panel.classList.add('open');
-    } else {
-      panel.classList.remove('open');
+  // ── Custom filter dropdown ──
+  var _currentFilter = 'all';
+  function _closeAllPanels() {
+    var mp = document.getElementById('filterMainPanel');
+    var gp = document.getElementById('genrePanel');
+    var fb = document.getElementById('filterBtn');
+    if (mp) mp.classList.remove('open');
+    if (gp) gp.classList.remove('open');
+    if (fb) fb.classList.remove('open');
+  }
+  function toggleFilterPanel(e) {
+    if (e) e.stopPropagation();
+    var mp = document.getElementById('filterMainPanel');
+    var fb = document.getElementById('filterBtn');
+    if (!mp) return;
+    var isOpen = mp.classList.contains('open');
+    _closeAllPanels();
+    if (!isOpen) {
+      var rect = fb.getBoundingClientRect();
+      mp.style.top  = (rect.bottom + 4) + 'px';
+      mp.style.left = rect.left + 'px';
+      mp.classList.add('open');
+      fb.classList.add('open');
     }
   }
+  function selectFilter(val, e) {
+    if (e) e.stopPropagation();
+    _currentFilter = val;
+    var labels = { all:'Tất cả', title:'Tên sách', author:'Tác giả/ NXB', genre:'Thể loại' };
+    document.getElementById('fbLabel').textContent = labels[val] || 'Tất cả';
+    var sel = document.getElementById('searchSelect');
+    if (sel) sel.value = val;
+    ['all','title','author','genre'].forEach(function(k) {
+      var el = document.getElementById('chk-' + k);
+      if (el) el.style.display = (k === val) ? 'inline' : 'none';
+    });
+    ['fmp-all','fmp-title','fmp-author','fmp-genre'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+    var active = document.getElementById('fmp-' + val);
+    if (active) active.classList.add('active');
+    _closeAllPanels();
+  }
+  function openGenrePanel(e) {
+    if (e) e.stopPropagation();
+    var gp  = document.getElementById('genrePanel');
+    var mp  = document.getElementById('filterMainPanel');
+    var fb  = document.getElementById('filterBtn');
+    if (!gp) return;
+    // Lấy tọa độ từ filterMainPanel nếu đang hiện, không thì từ filterBtn
+    var anchor = (mp && mp.classList.contains('open')) ? mp : fb;
+    var rect = anchor ? anchor.getBoundingClientRect() : {top:60, right:200};
+    gp.style.top  = rect.top + 'px';
+    gp.style.left = (rect.right + 4) + 'px';
+    gp.classList.add('open');
+  }
   function pickGenre(name) {
+    _currentFilter = 'genre';
+    document.getElementById('fbLabel').textContent = 'Thể loại';
+    var sel = document.getElementById('searchSelect');
+    if (sel) sel.value = 'genre';
     document.getElementById('searchInput').value = name;
-    document.getElementById('genrePanel').classList.remove('open');
-    // redirect sang timkiem với filter=genre
+    ['all','title','author','genre'].forEach(function(k) {
+      var el = document.getElementById('chk-' + k);
+      if (el) el.style.display = (k === 'genre') ? 'inline' : 'none';
+    });
+    ['fmp-all','fmp-title','fmp-author'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+    var fg = document.getElementById('fmp-genre');
+    if (fg) fg.classList.add('active');
+    document.querySelectorAll('.genre-item').forEach(function(el) {
+      el.classList.toggle('active', el.textContent.trim() === name);
+    });
+    _closeAllPanels();
+    // Redirect sang trang tìm kiếm với từ khóa thể loại
     window.location.href = 'timkiem.html?q=' + encodeURIComponent(name) + '&filter=genre';
   }
   document.addEventListener('click', function(e) {
-    var wrap = document.querySelector('.search-filter-wrap');
-    var panel = document.getElementById('genrePanel');
-    if (panel && wrap && !wrap.contains(e.target)) panel.classList.remove('open');
+    var wrap = document.getElementById('filterWrap');
+    var gp   = document.getElementById('genrePanel');
+    if (wrap && !wrap.contains(e.target) && gp && !gp.contains(e.target)) {
+      _closeAllPanels();
+    }
   });
 
   function doSearch() {
@@ -564,7 +703,7 @@
       var navName = document.getElementById('nav-name');
       if (navName) navName.textContent = user.name || '';
     } else {
-      if (profileBlock) profileBlock.style.display = 'none';
+      if (profileBlock) profileBlock.style.display = 'none';s
       if (loginLink) loginLink.style.display = 'inline-flex';
     }
   })();
