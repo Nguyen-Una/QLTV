@@ -9,7 +9,7 @@ const books = {
     summary: "Cuốn sách hệ thống hóa toàn diện Bộ Luật Kinh tế và các nghị định hướng dẫn. Mỗi chương đi kèm ví dụ thực tế về hợp đồng, thuế và xử lý tranh chấp doanh nghiệp. Phân tích rõ ràng quyền và nghĩa vụ của các bên tham gia thị trường. Có chú giải các thuật ngữ pháp lý quan trọng giúp đọc giả dễ nắm bắt.",
     location: "Tầng 2 – Kệ sách A3 (Pháp luật)",
     status: "Sẵn có (Còn 45 cuốn)",
-    image: "image/luật kinh tế.jpg"
+    image: "luat_kinh_te.jpg"
   },
   "tu-dien-kinh-te": {
     title: "Từ điển Kinh tế học Anh - Việt",
@@ -21,7 +21,7 @@ const books = {
     summary: "Bộ từ điển đầy đủ với hơn 5.000 mục từ song ngữ, giải thích các khái niệm kinh tế, tài chính và quản trị. Đặc biệt phù hợp cho sinh viên, nghiên cứu sinh và nhà kinh doanh cần tra cứu nhanh.",
     location: "Tầng 2 – Kệ sách A1 (Khu vực sách tra cứu/Từ điển)",
     status: "Sẵn có (Còn 48 cuốn)",
-    image: "image/từ điển kinh tế học.jpg"
+    image: "tu_dien_kinh_te_hoc.jpg"
   },
   "nen-kinh-te-tu-do": {
     title: "Nền Kinh tế Tự do",
@@ -33,7 +33,7 @@ const books = {
     summary: "Cuốn sách giải thích tường tận cách thị trường tự điều chỉnh thông qua cung và cầu. Mô tả vai trò nhà nước và các chính sách can thiệp trong từng bối cảnh kinh tế. Nhiều ví dụ minh họa từ lịch sử và các quốc gia đang phát triển. Đưa ra bài tập gợi mở để người đọc rèn luyện tư duy phân tích.",
     location: "Tầng 2 – Kệ sách A2 (Kinh tế vi mô)",
     status: "Sẵn có (Còn 43 cuốn)",
-    image: "image/nền kinh tế tự do.jpg"
+    image: "nen_kinh_te_tu_do.jpg"
   },
   "cach-nen-kinh-te-van-hanh": {
     title: "Cách Nền Kinh Tế Vận Hành",
@@ -45,7 +45,7 @@ const books = {
     summary: "Mô tả rõ ràng các động lực điều hành nền kinh tế vĩ mô và mối quan hệ giữa chính sách tiền tệ, tài khóa và tăng trưởng. Bao gồm các mô hình kinh tế quan trọng như IS-LM, AD-AS, và chu kỳ kinh doanh. Minh họa bằng số liệu thực tế và phân tích các cuộc khủng hoảng kinh tế. Cung cấp bài tập tình huống và phương pháp áp dụng cho lập kế hoạch kinh tế.",
     location: "Tầng 2 – Kệ sách A2 (Kinh tế vĩ mô)",
     status: "Sẵn có (Còn 47 cuốn)",
-    image: "image/cách nền kinh tế vận hành.jpg"
+    image: "cach_nen_kinh_te_van_hanh.jpg"
   },
   "marketing-5-0": {
     title: "Marketing 5.0",
@@ -57,7 +57,7 @@ const books = {
     summary: "Phân tích xu hướng marketing 5.0 với các công cụ AI, dữ liệu lớn và trải nghiệm số; kèm các case study từ các thương hiệu toàn cầu.",
     location: "Tầng 2 – Kệ sách M1 (Marketing)",
     status: "Sẵn có (Còn 46 cuốn)",
-    image: "image/Marketing 5.0.jpg"
+    image: "Marketing_5.0.jpg"
   },
   "quan-tri-marketing": {
     title: "Quản trị Marketing",
@@ -69,7 +69,7 @@ const books = {
     summary: "Tổng hợp phương pháp phân tích thị trường, quản lý sản phẩm và triển khai chiến dịch hiệu quả, kèm các mẫu kế hoạch marketing và chuẩn đánh giá.",
     location: "Tầng 2 – Kệ sách M1 (Marketing)",
     status: "Sẵn có (Còn 44 cuốn)",
-    image: "image/quản trị marketing.jpg"
+    image: "quan_tri_marketing.jpg"
   },
   "kinh-te-vi-mo": {
     title: "Kinh tế Vĩ mô",
@@ -81,7 +81,7 @@ const books = {
     summary: "Giải thích chi tiết các chỉ số vĩ mô, cách đo lường và tác động của chính sách tiền tệ, tài khóa đến nền kinh tế. Kèm biểu đồ và bài tập mẫu.",
     location: "Tầng 2 – Kệ sách A2 (Kinh tế vĩ mô)",
     status: "Sẵn có (Còn 42 cuốn)",
-    image: "image/kinh tế vĩ mô.jpg"
+    image: "kinh_te_vi_mo.jpg"
   },
   "tu-tuong-ho-chi-minh": {
     title: "Giáo trình Tư tưởng Hồ Chí Minh",
@@ -93,7 +93,7 @@ const books = {
     summary: "Cuốn sách hệ thống hóa tư tưởng Hồ Chí Minh theo từng chủ đề: đạo đức cách mạng, lãnh đạo, dân chủ, và phát triển bền vững. Phân tích nguyên lý, giá trị và ứng dụng trong bối cảnh Việt Nam hiện đại. Kèm trích dẫn nguyên tác và bình luận chuyên sâu từ các nhà nghiên cứu. Thích hợp cho sinh viên, cán bộ và người đọc quan tâm đến lý luận chính trị.",
     location: "Tầng 1 – Kệ sách C1 (Chính trị)",
     status: "Sẵn có (Còn 41 cuốn)",
-    image: "image/gt tử tưởng HCM.jpg"
+    image: "gt_tu_tuong_HCM.jpg"
   },
   "dai-hoc-khoi-nghiep": {
     title: "Đại học Khởi nghiệp",
@@ -105,7 +105,7 @@ const books = {
     summary: "Cuốn sách là cẩm nang thực chiến cho những người muốn khởi nghiệp từ con số 0. Bao gồm phương pháp xác định vấn đề, tìm ý tưởng và xác định khách hàng mục tiêu. Hướng dẫn xây dựng MVP, thử nghiệm thị trường và gọi vốn khởi sự. Cung cấp các checklist, mẫu kế hoạch và ví dụ từ startup Việt Nam.",
     location: "Tầng 2 – Kệ sách K1 (Khởi nghiệp)",
     status: "Sẵn có (Còn 46 cuốn)",
-    image: "image/Đại học khởi nghiệp.jpg"
+    image: "dai_hoc_khoi_nghiep.jpg"
   },
   "nhung-cam-ky": {
     title: "Những Cấm Kỵ",
@@ -117,7 +117,7 @@ const books = {
     summary: "Cuốn sách liệt kê những sai lầm phổ biến trong giao tiếp và cách tránh chúng. Cung cấp kỹ thuật lắng nghe, phản hồi và xây dựng niềm tin trong công việc. Kèm các tình huống thực tế và hướng giải quyết cụ thể. Giúp bạn cải thiện mối quan hệ cá nhân và chuyên nghiệp từng ngày.",
     location: "Tầng 1 – Kệ sách P1 (Kỹ năng)",
     status: "Sẵn có (Còn 44 cuốn)",
-    image: "image/những cấm kỵ.jpg"
+    image: "nhung_cam_ky.jpg"
   },
   "tinh-hoa-kinh-te-hoc": {
     title: "Tinh Hoa Kinh Tế Học",
@@ -129,7 +129,7 @@ const books = {
     summary: "Cuốn sách khám phá những đóng góp lớn nhất trong lịch sử kinh tế học từ Adam Smith đến hiện đại. Giải thích các mô hình lý thuyết đồng thời phân tích ứng dụng trong chính sách công và thị trường toàn cầu. Bao gồm bình luận về khủng hoảng tài chính và chính sách tiền tệ. Hướng người đọc xây dựng tư duy phản biện khi đọc số liệu kinh tế.",
     location: "Tầng 2 – Kệ sách A1 (Kinh tế học)",
     status: "Sẵn có (Còn 45 cuốn)",
-    image: "image/tinh hoa kinh tế học.jpg"
+    image: "tinh_hoa_kinh_te_hoc.jpg"
   },
   "lich-su-dang": {
     title: "Lịch sử Đảng",
@@ -141,7 +141,7 @@ const books = {
     summary: "Sách trình bày chi tiết các mốc lịch sử quan trọng, các nhân vật chủ chốt và các giai đoạn phát triển của Đảng. Phân tích bối cảnh chính trị – xã hội của từng thời kỳ và những quyết sách định hướng. Có phần bình luận về vai trò của Đảng trong tiến trình xây dựng đất nước. Giúp độc giả nhận diện bài học từ quá khứ và định hướng tương lai.",
     location: "Tầng 1 – Kệ sách L1 (Lịch sử)",
     status: "Sẵn có (Còn 43 cuốn)",
-    image: "image/gt LSD.jpg"
+    image: "gt_LSD.jpg"
   },
   "nguyen-ly-tiep-thi": {
     title: "Nguyên lý Tiếp thị",
@@ -153,7 +153,7 @@ const books = {
     summary: "Cung cấp lộ trình chi tiết xây dựng chiến lược tiếp thị, từ phân tích thị trường đến đo lường hiệu quả, với ví dụ thực tế từ doanh nghiệp.",
     location: "Tầng 2 – Kệ sách M1 (Marketing)",
     status: "Sẵn có (Còn 42 cuốn)",
-    image: "image/nguyên lý tiếp thị.jpg"
+    image: "nguyen_ly_tiep_thi.jpg"
   },
   "doi-mat-tu-ban": {
     title: "Đối mặt Tư bản",
@@ -165,6 +165,6 @@ const books = {
     summary: "Phân tích sâu bối cảnh toàn cầu, tác động của tư bản và chiến lược thích nghi cho các nền kinh tế đang phát triển trong thế kỷ 21.",
     location: "Tầng 2 – Kệ sách A2 (Kinh tế vĩ mô)",
     status: "Sẵn có (Còn 44 cuốn)",
-    image: "image/đối mặt tư bản.jpg"
+    image: "doi_mat_tu_ban.jpg"
   }
 };
