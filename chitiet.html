@@ -111,18 +111,7 @@
       width: 100%; max-width: 860px;
       border: 2px solid #3a9ad9;
     }
-    .search-bar-top .search-filter-wrap { border-radius: 8px 0 0 8px; overflow: visible; }
-    .search-bar-top .search-select-top { border-radius: 8px 0 0 8px; }
     .search-bar-top .search-btn-top { border-radius: 0 8px 8px 0; }
-    .search-select-top {
-      padding: 0 14px; height: 50px; border: none; outline: none;
-      background: #fff; font-family: inherit; font-size: 14px; font-weight: 600;
-      color: #3a9ad9; border-right: 2px solid #3a9ad9;
-      cursor: pointer; appearance: none; -webkit-appearance: none;
-      padding-right: 36px; min-width: 140px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233a9ad9' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 12px center;
-    }
     .search-input-top {
       flex: 1; height: 50px; border: none; outline: none;
       padding: 0 18px; font-family: inherit; font-size: 15px; color: #333;
@@ -133,6 +122,50 @@
       transition: background .2s; flex-shrink: 0;
     }
     .search-btn-top:hover { background: #2b7eb8; }
+
+    /* ── CUSTOM FILTER DROPDOWN ── */
+    .filter-wrap { position: relative; height: 50px; flex-shrink: 0; border-right: 2px solid #3a9ad9; }
+    .filter-btn {
+      height: 50px; padding: 0 14px 0 12px;
+      display: flex; align-items: center; gap: 8px;
+      background: #fff; border: none; cursor: pointer;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      color: #3a9ad9; min-width: 140px;
+      border-radius: 8px 0 0 8px; user-select: none;
+    }
+    .filter-btn:hover { background: #f0f6fb; }
+    .filter-btn .fb-label { flex: 1; text-align: left; }
+    .filter-btn .fb-chevron { font-size: 10px; color: #3a9ad9; transition: transform .2s; }
+    .filter-btn.open .fb-chevron { transform: rotate(180deg); }
+    .filter-main-panel {
+      display: none; position: fixed;
+      background: #fff; border-radius: 10px; min-width: 200px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 9999;
+      border: 1px solid #e0eaf4; overflow: hidden;
+    }
+    .filter-main-panel.open { display: block; animation: dropIn .15s ease; }
+    .fmp-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 16px; font-size: 14px; font-weight: 500;
+      color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap;
+    }
+    .fmp-item:hover { background: #eaf4fd; color: #3a9ad9; }
+    .fmp-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
+    .fmp-item .fmp-check { margin-left: auto; font-size: 13px; color: #3a9ad9; }
+    .genre-sub-panel {
+      display: none; position: fixed;
+      background: #fff; border-radius: 10px; min-width: 210px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 10000;
+      border: 1px solid #e0eaf4; overflow: hidden;
+    }
+    .genre-sub-panel.open { display: block; animation: dropIn .15s ease; }
+    .genre-item {
+      display: flex; align-items: center;
+      padding: 11px 18px; font-size: 14px; font-weight: 500;
+      color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap;
+    }
+    .genre-item:hover { background: #eaf4fd; color: #3a9ad9; }
+    .genre-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
 
     /* MAIN CONTENT */
     .main { padding: 32px 60px 60px; }
@@ -238,54 +271,9 @@
       border-bottom: 1px solid #3a9ad9;
     }
 
-    /* ── CUSTOM FILTER DROPDOWN ── */
-    .filter-wrap {
-      position: relative; height: 50px; flex-shrink: 0;
-      border-right: 2px solid #3a9ad9;
-    }
-    .filter-btn {
-      height: 50px; padding: 0 14px 0 12px;
-      display: flex; align-items: center; gap: 8px;
-      background: #fff; border: none; cursor: pointer;
-      font-family: inherit; font-size: 14px; font-weight: 600;
-      color: #3a9ad9; min-width: 140px;
-      border-radius: 8px 0 0 8px; user-select: none;
-    }
-    .filter-btn:hover { background: #f0f6fb; }
-    .filter-btn .fb-label { flex: 1; text-align: left; }
-    .filter-btn .fb-chevron { font-size: 10px; color: #3a9ad9; transition: transform .2s; }
-    .filter-btn.open .fb-chevron { transform: rotate(180deg); }
-    .filter-main-panel {
-      display: none; position: fixed;
-      background: #fff; border-radius: 10px; min-width: 200px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 9999;
-      border: 1px solid #e0eaf4; overflow: hidden;
-    }
-    .filter-main-panel.open { display: block; animation: dropIn .15s ease; }
-    .fmp-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 11px 16px; font-size: 14px; font-weight: 500;
-      color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap;
-    }
-    .fmp-item:hover { background: #eaf4fd; color: #3a9ad9; }
-    .fmp-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
-    .fmp-item .fmp-check { margin-left: auto; font-size: 13px; color: #3a9ad9; }
-    .fmp-item .fmp-arrow { margin-left: auto; font-size: 11px; color: #aaa; }
-    .genre-sub-panel {
-      display: none; position: fixed;
-      background: #fff; border-radius: 10px; min-width: 210px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 10000;
-      border: 1px solid #e0eaf4; overflow: hidden;
-    }
-    .genre-sub-panel.open { display: block; animation: dropIn .15s ease; }
-    .genre-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 11px 18px; font-size: 14px; font-weight: 500;
-      color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap;
-    }
-    .genre-item:hover { background: #eaf4fd; color: #3a9ad9; }
-    .genre-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
+
   </style>
+  <link rel="stylesheet" href="responsive.css" />
 </head>
 <body>
 
@@ -349,7 +337,7 @@
     <div class="filter-wrap" id="filterWrap">
       <button class="filter-btn" id="filterBtn" onclick="toggleFilterPanel(event)">
         <span class="fb-label" id="fbLabel">Tất cả</span>
-        <span class="fb-chevron" id="fbChevron">▼</span>
+        <span class="fb-chevron">▼</span>
       </button>
       <div class="filter-main-panel" id="filterMainPanel">
         <div class="fmp-item active" id="fmp-all" onclick="selectFilter('all',event)">
@@ -463,34 +451,9 @@
     // Set page title
     document.title = book.title + ' – Library University';
 
-    // Đồng bộ thanh tìm kiếm: điền từ khóa và filter từ URL
-    var querySearch  = params.get('q')      || '';
-    var filterSearch = params.get('filter') || 'all';
+    // Pre-fill search bar only if URL contains a query param (search performed)
+    var querySearch = params.get('q') || '';
     document.getElementById('searchInput').value = querySearch;
-    var selEl = document.getElementById('searchSelect');
-    if (selEl) {
-      for (var i = 0; i < selEl.options.length; i++) {
-        if (selEl.options[i].value === filterSearch) { selEl.selectedIndex = i; break; }
-      }
-    }
-    // Đồng bộ custom filter button
-    (function() {
-      var labels = { all:'Tất cả', title:'Tên sách', author:'Tác giả/ NXB', genre:'Thể loại' };
-      var lbl = document.getElementById('fbLabel');
-      if (lbl) {
-        lbl.textContent = labels[filterSearch] || 'Tất cả';
-      }
-      ['all','title','author'].forEach(function(k) {
-        var el = document.getElementById('chk-' + k);
-        if (el) el.style.display = (k === filterSearch) ? 'inline' : 'none';
-      });
-      ['fmp-all','fmp-title','fmp-author','fmp-genre'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.classList.remove('active');
-      });
-      var active = document.getElementById('fmp-' + filterSearch);
-      if (active) active.classList.add('active');
-    })();
 
     const imgHtml = book.image
       ? `<img src="${book.image}" alt="${book.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="book-cover-placeholder-detail" style="display:none;background:linear-gradient(160deg,#1a2a4a,#2e5090);">${book.title}</div>`
@@ -547,7 +510,7 @@
       <div class="not-found">
         <h2>Không tìm thấy sách</h2>
         <p>Sách bạn tìm kiếm không tồn tại hoặc đã bị xóa.</p>
-        <a href="' + backUrl + '" class="back-link">' + backLabel + '</a>
+        <a href="${backUrl}" class="back-link">${backLabel}</a>
       </div>
     `;
   }
@@ -610,11 +573,10 @@
   }
   function openGenrePanel(e) {
     if (e) e.stopPropagation();
-    var gp  = document.getElementById('genrePanel');
-    var mp  = document.getElementById('filterMainPanel');
-    var fb  = document.getElementById('filterBtn');
+    var gp = document.getElementById('genrePanel');
+    var mp = document.getElementById('filterMainPanel');
+    var fb = document.getElementById('filterBtn');
     if (!gp) return;
-    // Lấy tọa độ từ filterMainPanel nếu đang hiện, không thì từ filterBtn
     var anchor = (mp && mp.classList.contains('open')) ? mp : fb;
     var rect = anchor ? anchor.getBoundingClientRect() : {top:60, right:200};
     gp.style.top  = rect.top + 'px';
@@ -637,12 +599,8 @@
     });
     var fg = document.getElementById('fmp-genre');
     if (fg) fg.classList.add('active');
-    document.querySelectorAll('.genre-item').forEach(function(el) {
-      el.classList.toggle('active', el.textContent.trim() === name);
-    });
     _closeAllPanels();
-    // Redirect sang trang tìm kiếm với từ khóa thể loại
-    window.location.href = 'timkiem.html?q=' + encodeURIComponent(name) + '&filter=genre';
+    // Chỉ điền vào ô input, người dùng tự nhấn nút tìm kiếm
   }
   document.addEventListener('click', function(e) {
     var wrap = document.getElementById('filterWrap');
@@ -651,6 +609,53 @@
       _closeAllPanels();
     }
   });
+  // ── Reposition panels khi resize (không đóng) ──
+  (function() {
+    var _resizeTimer = null;
+    window.addEventListener('resize', function() {
+      clearTimeout(_resizeTimer);
+      _resizeTimer = setTimeout(function() {
+        var mp = document.getElementById('filterMainPanel');
+        var gp = document.getElementById('genrePanel');
+        var fb = document.getElementById('filterBtn');
+        if (!fb) return;
+        var mpOpen = mp && mp.classList.contains('open');
+        var gpOpen = gp && gp.classList.contains('open');
+        if (!mpOpen && !gpOpen) return; // không có gì đang mở, bỏ qua
+
+        var r = fb.getBoundingClientRect();
+
+        if (mpOpen) {
+          var panelW = Math.min(200, window.innerWidth * 0.88);
+          var top  = r.bottom + 4;
+          var left = r.left;
+          if (left + panelW > window.innerWidth - 8) left = Math.max(8, window.innerWidth - panelW - 8);
+          mp.style.top      = top + 'px';
+          mp.style.left     = left + 'px';
+          mp.style.minWidth = panelW + 'px';
+        }
+
+        if (gpOpen) {
+          var anchor = (mp && mpOpen) ? mp : fb;
+          var ar = anchor.getBoundingClientRect();
+          var pw = Math.min(210, window.innerWidth * 0.88);
+          var gt, gl;
+          if (ar.right + 6 + pw <= window.innerWidth - 4) {
+            gt = ar.top; gl = ar.right + 6;
+          } else if (ar.left - pw - 6 >= 4) {
+            gt = ar.top; gl = ar.left - pw - 6;
+          } else {
+            gt = ar.bottom + 4;
+            gl = Math.max(8, Math.min(ar.left, window.innerWidth - pw - 8));
+          }
+          if (gt + 300 > window.innerHeight) gt = Math.max(4, window.innerHeight - 320);
+          gp.style.top      = gt + 'px';
+          gp.style.left     = gl + 'px';
+          gp.style.minWidth = pw + 'px';
+        }
+      }, 50); // debounce 50ms
+    });
+  })();
 
   function doSearch() {
     var q = document.getElementById('searchInput').value.trim();
@@ -703,10 +708,20 @@
       var navName = document.getElementById('nav-name');
       if (navName) navName.textContent = user.name || '';
     } else {
-      if (profileBlock) profileBlock.style.display = 'none';s
+      if (profileBlock) profileBlock.style.display = 'none';
       if (loginLink) loginLink.style.display = 'inline-flex';
     }
   })();
+
+  // Đóng dropdown khi scroll
+  window.addEventListener('scroll', function() {
+    var mp = document.getElementById('filterMainPanel');
+    var gp = document.getElementById('genrePanel');
+    if ((mp && mp.classList.contains('open')) || (gp && gp.classList.contains('open'))) {
+      _closeAllPanels();
+    }
+  }, { passive: true });
 </script>
+  <script src="nav-mobile.js"></script>
 </body>
 </html>
