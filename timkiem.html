@@ -255,16 +255,30 @@
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="books.js"></script>
 <script>
   // ── Đọc URL params ──
+  // ── Sync UI filter button từ giá trị ──
+  function _syncFilterUI(val) {
+    var labels = { all:'Tất cả', title:'Tên sách', author:'Tác giả/ NXB', genre:'Thể loại' };
+    var lbl = document.getElementById('fbLabel');
+    if (lbl) lbl.textContent = labels[val] || 'Tất cả';
+    var sel = document.getElementById('searchSelect');
+    if (sel) sel.value = val;
+    ['all','title','author','genre'].forEach(function(k) {
+      var el = document.getElementById('chk-' + k);
+      if (el) el.style.display = (k === val) ? 'inline' : 'none';
+    });
+    ['fmp-all','fmp-title','fmp-author','fmp-genre'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.toggle('active', id === 'fmp-' + val);
+    });
+  }
   var params        = new URLSearchParams(window.location.search);
   var currentQuery  = params.get('q')      || '';
   var currentFilter = params.get('filter') || 'all';
 
   // ── Điền lại search bar từ URL ──
   document.getElementById('searchInput').value = currentQuery;
-  var sel = document.getElementById('searchSelect');
-  for (var i = 0; i < sel.options.length; i++) {
-    if (sel.options[i].value === currentFilter) { sel.selectedIndex = i; break; }
-  }
+  _syncFilterUI(currentFilter);
+  _currentFilter = currentFilter;
 
   // ── Tìm kiếm ──
   var filterLabel = { all: 'Tất cả', title: 'Tên sách', author: 'Tác giả/NXB', genre: 'Thể loại' };
@@ -376,20 +390,7 @@
   function selectFilter(val, e) {
     if (e) e.stopPropagation();
     _currentFilter = val;
-    var labels = { all:'Tất cả', title:'Tên sách', author:'Tác giả/ NXB', genre:'Thể loại' };
-    document.getElementById('fbLabel').textContent = labels[val] || 'Tất cả';
-    var sel = document.getElementById('searchSelect');
-    if (sel) sel.value = val;
-    ['all','title','author','genre'].forEach(function(k) {
-      var el = document.getElementById('chk-' + k);
-      if (el) el.style.display = (k === val) ? 'inline' : 'none';
-    });
-    ['fmp-all','fmp-title','fmp-author','fmp-genre'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.classList.remove('active');
-    });
-    var active = document.getElementById('fmp-' + val);
-    if (active) active.classList.add('active');
+    _syncFilterUI(val);
     _closeAllPanels();
   }
   function openGenrePanel(e) {
@@ -406,20 +407,8 @@
   }
   function pickGenre(name) {
     _currentFilter = 'genre';
-    document.getElementById('fbLabel').textContent = 'Thể loại';
-    var sel = document.getElementById('searchSelect');
-    if (sel) sel.value = 'genre';
     document.getElementById('searchInput').value = name;
-    ['all','title','author','genre'].forEach(function(k) {
-      var el = document.getElementById('chk-' + k);
-      if (el) el.style.display = (k === 'genre') ? 'inline' : 'none';
-    });
-    ['fmp-all','fmp-title','fmp-author'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.classList.remove('active');
-    });
-    var fg = document.getElementById('fmp-genre');
-    if (fg) fg.classList.add('active');
+    _syncFilterUI('genre');
     _closeAllPanels();
     // Chỉ điền vào ô input, người dùng tự nhấn nút tìm kiếm
   }
