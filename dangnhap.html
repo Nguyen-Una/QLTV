@@ -691,6 +691,7 @@
   function doRegister() {
     clearErrors();
     var name     = document.getElementById('reg-name').value.trim();
+    var birthday = document.getElementById('reg-birthday').value;
     var email    = document.getElementById('reg-email').value.trim();
     var pass     = document.getElementById('reg-pass').value;
     var pass2    = document.getElementById('reg-pass2').value;
@@ -702,6 +703,7 @@
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!name)                              { setError('field-reg-name');     ok = false; }
+    if (!birthday)                          { setError('field-reg-birthday'); ok = false; }
     if (!email || !emailRegex.test(email))  { setError('field-reg-email');    ok = false; }
     if (!pass || pass.length < 6)           { setError('field-reg-pass');     ok = false; }
     if (pass !== pass2)                     { setError('field-reg-pass2');    ok = false; }
@@ -718,6 +720,7 @@
       username: email,
       email:    email,
       name:     name,
+      dob:      birthday,
       contact:  email,
       password: pass,
       code:     'SV' + String(Math.floor(1000 + Math.random()*9000)).substring(0,4),
@@ -730,7 +733,7 @@
     localStorage.setItem('lib_user_' + email, JSON.stringify(registeredUser));
 
     // Reset form
-    ['reg-name','reg-email','reg-pass','reg-pass2','reg-class','reg-phone'].forEach(function(id){
+    ['reg-name','reg-birthday','reg-email','reg-pass','reg-pass2','reg-class','reg-phone'].forEach(function(id){
       document.getElementById(id).value = '';
     });
 
