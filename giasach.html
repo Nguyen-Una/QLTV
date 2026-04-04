@@ -25,6 +25,99 @@
     .nav-links a { text-decoration: none; font-size: 15px; font-weight: 500; color: #333; transition: color .2s; }
     .nav-links a:hover { color: #1a1a2e; }
     .nav-right { display: flex; align-items: center; gap: 0; position: relative; }
+
+    /* ── HAMBURGER & MOBILE NAV ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none;
+      border: none;
+      z-index: 201;
+      margin-left: 8px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2.5px;
+      background: #1a1a2e;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+    .nav-mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 199;
+    }
+    .nav-mobile-overlay.open { display: block; }
+
+    .nav-mobile-menu {
+      position: fixed;
+      top: 0; right: 0;
+      width: min(280px, 85vw);
+      height: 100vh;
+      background: #fff;
+      z-index: 200;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      padding: 72px 0 24px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+    .nav-mobile-menu.open { transform: translateX(0); }
+    .nav-mobile-menu a,
+    .nav-mobile-menu button {
+      display: block;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a2e;
+      text-decoration: none;
+      border: none;
+      background: none;
+      text-align: left;
+      font-family: inherit;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f6fb;
+      transition: background 0.15s;
+    }
+    .nav-mobile-menu a:hover,
+    .nav-mobile-menu button:hover { background: #f0f6fb; color: #3a9ad9; }
+    .nav-mobile-menu a.active { color: #3a9ad9; font-weight: 700; }
+    .nav-mobile-divider { height: 1px; background: #e8f0f7; margin: 8px 0; }
+
+    @media (max-width: 768px) {
+      nav { padding: 10px 16px !important; }
+      .nav-links { display: none !important; }
+      .nav-hamburger { display: flex !important; }
+      .nav-right { display: none !important; }
+      .logo-text strong { font-size: 12px !important; }
+      .logo-text span   { font-size: 10px !important; }
+      .logo-icon { width: 36px !important; height: 36px !important; }
+      .main { padding: 20px 12px 40px !important; }
+      .tab-btn { font-size: 12px !important; padding: 14px 6px !important; letter-spacing: 0 !important; }
+      .record-row { padding: 12px 14px !important; flex-wrap: wrap; gap: 6px; }
+      .record-id { font-size: 12.5px !important; }
+      .record-status { font-size: 12px !important; }
+      footer { flex-direction: column !important; padding: 20px 16px !important; gap: 18px !important; }
+      .footer-col, .footer-col:first-child { flex: unset !important; width: 100% !important; }
+    }
+    @media (max-width: 480px) {
+      .tab-btn { font-size: 11px !important; padding: 12px 4px !important; }
+      .fine-grid { grid-template-columns: 1fr !important; }
+      .borrow-period { font-size: 12px !important; }
+      .borrow-list td { font-size: 12px !important; }
+      .record-detail { padding: 14px 14px 16px !important; }
+    }
     .nav-user-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; padding: 6px 8px; border-radius: 8px; transition: background .15s; }
     .nav-user-btn:hover { background: rgba(58,154,217,0.10); }
     .nav-user-btn .user-icon { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 2px solid #3a9ad9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -250,7 +343,7 @@
     <table class="footer-table">
       <tr><td>Địa chỉ:</td><td>Hồ Tùng Mậu, Từ Liêm, Hà Nội, Việt Nam</td></tr>
       <tr><td>Điện thoại:</td><td>(84)24.12.345.678</td></tr>
-      <tr><td>Email:</td><td>libuniversity@gmail.com</td></tr>
+      <tr><td>Email:</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f09c9992859e9986958283998489b0979d91999cde939f9d">[email&#160;protected]</a></td></tr>
     </table>
   </div>
   <div class="footer-col">
@@ -291,7 +384,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══════════════════════════════════════════════
 //  DỮ LIỆU MẪU – thay bằng dữ liệu thật nếu có
 // ══════════════════════════════════════════════
@@ -335,30 +428,30 @@ var borrowData = [
 
 // Phiếu phạt
 var fineData = [
-  {
-    id: 'PP0020',
-    status: 'chua-tt',    // 'chua-tt' | 'da-tt'
-    statusLabel: 'Chưa thanh toán',
-    code: 'PP0020',
-    userName: 'LÊ THANH NGÂN',
-    amount: '85.000 VNĐ',
-    reasons: ['Quá hạn 5 ngày', 'Mất 2 cuốn sách'],
-    breakdown: '60.000 VNĐ + 25.000 VNĐ',
-    note: '5.000 VNĐ/ký',
-    total: '85.000 VNĐ'
-  },
-  {
-    id: 'PP0010',
-    status: 'da-tt',
-    statusLabel: 'Đã thanh toán',
-    code: 'PP0010',
-    userName: 'LÊ THANH NGÂN',
-    amount: '10.000 VNĐ',
-    reasons: ['Quá hạn 2 ngày'],
-    breakdown: '10.000 VNĐ',
-    note: '5.000 VNĐ/ngày',
-    total: '10.000 VNĐ'
-  }
+  // {
+  //   id: 'PP0020',
+  //   status: 'chua-tt',    // 'chua-tt' | 'da-tt'
+  //   statusLabel: 'Chưa thanh toán',
+  //   code: 'PP0020',
+  //   userName: 'LÊ THANH NGÂN',
+  //   amount: '85.000 VNĐ',
+  //   reasons: ['Quá hạn 5 ngày', 'Mất 2 cuốn sách'],
+  //   breakdown: '60.000 VNĐ + 25.000 VNĐ',
+  //   note: '5.000 VNĐ/ký',
+  //   total: '85.000 VNĐ'
+  // },
+  // {
+  //   id: 'PP0010',
+  //   status: 'da-tt',
+  //   statusLabel: 'Đã thanh toán',
+  //   code: 'PP0010',
+  //   userName: 'LÊ THANH NGÂN',
+  //   amount: '10.000 VNĐ',
+  //   reasons: ['Quá hạn 2 ngày'],
+  //   breakdown: '10.000 VNĐ',
+  //   note: '5.000 VNĐ/ngày',
+  //   total: '10.000 VNĐ'
+  // }
 ];
 
 // ══════════════════════════════════════════════
@@ -537,11 +630,11 @@ function toggleDetail(id) {
   renderFines(fineData, uName);
   renderBorrows(borrowData, uName);
 
-  // Mặc định mở tab Phiếu phạt (theo ảnh)
-  switchTab('phieu');
-
-
+  // Mặc định mở tab lịch sử
+  switchTab('lichsu');
 })();
 </script>
+  <link rel="stylesheet" href="responsive.css" />
+  <script src="nav-mobile.js"></script>
 </body>
 </html>
