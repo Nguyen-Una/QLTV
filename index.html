@@ -134,21 +134,8 @@
     .search-bar {
       display: flex; align-items: center;
       background: #fff; border-radius: 10px;
-      overflow: hidden; width: 100%; max-width: 680px;
+      overflow: visible; width: 100%; max-width: 680px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.13);
-    }
-    .search-select {
-      padding: 0 14px; height: 50px;
-      border: none; outline: none;
-      background: #f5f5f5; font-family: inherit;
-      font-size: 14px; font-weight: 500; color: #333;
-      border-right: 1px solid #ddd;
-      cursor: pointer; appearance: none;
-      -webkit-appearance: none;
-      padding-right: 28px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
     }
     .search-input {
       flex: 1; height: 50px; border: none; outline: none;
@@ -159,7 +146,7 @@
       width: 56px; height: 50px;
       background: #3a9ad9; border: none;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background .2s;
+      transition: background .2s; border-radius: 0 10px 10px 0; flex-shrink: 0;
     }
     .search-btn:hover { background: #2b7eb8; }
     .search-btn svg { width: 20px; height: 20px; fill: #fff; }
@@ -167,23 +154,38 @@
     .filter-wrap {
       position: relative; height: 50px; flex-shrink: 0;
       border-right: 1px solid #ddd;
+      overflow: visible;
     }
     .filter-btn {
-      height: 50px; padding: 0 14px 0 12px;
-      display: flex; align-items: center; gap: 8px;
+      height: 50px; padding: 0 12px 0 12px;
+      display: flex; align-items: center; gap: 6px;
       background: #f5f5f5; border: none; cursor: pointer;
       font-family: inherit; font-size: 14px; font-weight: 500;
-      color: #333; min-width: 130px;
+      color: #333; min-width: 110px; max-width: 140px;
       border-radius: 10px 0 0 10px;
-      user-select: none;
+      user-select: none; white-space: nowrap; overflow: hidden;
+    }
+    @media (max-width: 480px) {
+      .filter-btn {
+        min-width: 80px !important;
+        max-width: 100px !important;
+        font-size: 12px !important;
+        padding: 0 8px !important;
+        gap: 4px !important;
+      }
+      .filter-btn .fb-label { max-width: 60px; overflow: hidden; text-overflow: ellipsis; }
+      .fmp-item { padding: 10px 14px !important; font-size: 13px !important; }
+      .genre-item { padding: 10px 14px !important; font-size: 13px !important; }
     }
     .filter-btn:hover { background: #e8f4fd; color: #3a9ad9; }
     .filter-btn .fb-label { flex: 1; text-align: left; }
     .filter-btn .fb-chevron { font-size: 10px; color: #888; transition: transform .2s; }
     .filter-btn.open .fb-chevron { transform: rotate(180deg); }
     .filter-main-panel {
-      display: none; position: fixed;
-      background: #fff; border-radius: 10px; min-width: 200px;
+      display: none;
+      position: fixed;
+      background: #fff; border-radius: 10px;
+      min-width: 180px; width: max-content; max-width: 88vw;
       box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 9999;
       border: 1px solid #e0eaf4; overflow: hidden;
     }
@@ -196,22 +198,22 @@
     .fmp-item:hover { background: #eaf4fd; color: #3a9ad9; }
     .fmp-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
     .fmp-item .fmp-check { margin-left: auto; font-size: 13px; color: #3a9ad9; }
-    .fmp-item .fmp-arrow { margin-left: auto; font-size: 11px; color: #aaa; }
     .genre-sub-panel {
-      display: none; position: fixed;
-      background: #fff; border-radius: 10px; min-width: 210px;
+      display: none;
+      position: fixed;
+      background: #fff; border-radius: 10px;
+      min-width: 180px; width: max-content; max-width: 88vw;
       box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 10000;
       border: 1px solid #e0eaf4; overflow: hidden;
     }
     .genre-sub-panel.open { display: block; animation: dropIn .15s ease; }
     .genre-item {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: center;
       padding: 11px 18px; font-size: 14px; font-weight: 500;
       color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap;
     }
     .genre-item:hover { background: #eaf4fd; color: #3a9ad9; }
     .genre-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
-    .genre-item .gi-check { font-size: 13px; color: #3a9ad9; }
 
     /* SECTIONS */
     .section { margin: 32px 60px 0; }
@@ -349,6 +351,27 @@
       cursor: pointer;
     }
     .qr-icon svg { width: 24px; height: 24px; fill: #1a1a2e; }
+  
+    /* ── Dropdown tìm kiếm responsive ── */
+    @media (max-width: 600px) {
+      .filter-btn {
+        min-width: 80px !important;
+        max-width: 100px !important;
+        font-size: 12px !important;
+        padding: 0 8px 0 8px !important;
+        gap: 4px !important;
+      }
+      .filter-btn .fb-label {
+        max-width: 56px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .fmp-item { padding: 10px 14px !important; font-size: 13px !important; }
+      .genre-item { padding: 10px 14px !important; font-size: 13px !important; }
+      .filter-main-panel, .genre-sub-panel { font-size: 13px !important; }
+    }
+  
   </style>
 </head>
 <body>
@@ -403,41 +426,20 @@
 <!-- HERO -->
 <div class="hero">
   <!-- Banner image -->
-  <img class="hero-bg" src="banner.jpg" alt="Banner" />
+  <img class="hero-bg" src="image/banner.jpg" alt="Banner" />
   <div class="hero-content">
     <h1>Chào mừng bạn đến với thư viện !</h1>
     <div class="search-bar">
       <div class="filter-wrap" id="filterWrap">
         <button class="filter-btn" id="filterBtn" onclick="toggleFilterPanel(event)">
           <span class="fb-label" id="fbLabel">Tất cả</span>
-          <span class="fb-chevron" id="fbChevron">▼</span>
+          <span class="fb-chevron">▼</span>
         </button>
-        <div class="filter-main-panel" id="filterMainPanel">
-          <div class="fmp-item active" id="fmp-all" onclick="selectFilter('all',event)">
-            <span>Tất cả</span><span class="fmp-check" id="chk-all">✓</span>
-          </div>
-          <div class="fmp-item" id="fmp-title" onclick="selectFilter('title',event)">
-            <span>Tên sách</span><span class="fmp-check" id="chk-title" style="display:none">✓</span>
-          </div>
-          <div class="fmp-item" id="fmp-genre" onclick="openGenrePanel(event)">
-            <span>Thể loại</span><span class="fmp-check" id="chk-genre" style="display:none">✓</span>
-          </div>
-          <div class="fmp-item" id="fmp-author" onclick="selectFilter('author',event)">
-            <span>Tác giả/ NXB</span><span class="fmp-check" id="chk-author" style="display:none">✓</span>
-          </div>
-        </div>
-        <div class="genre-sub-panel" id="genrePanel">
-          <div class="genre-item" onclick="pickGenre('Giáo trình')">Giáo trình</div>
-          <div class="genre-item" onclick="pickGenre('Sách tham khảo')">Sách tham khảo</div>
-          <div class="genre-item" onclick="pickGenre('Tài liệu ôn thi')">Tài liệu ôn thi</div>
-          <div class="genre-item" onclick="pickGenre('Nghiên cứu khoa học')">Nghiên cứu khoa học</div>
-          <div class="genre-item" onclick="pickGenre('Sách bài tập')">Sách bài tập</div>
-          <div class="genre-item" onclick="pickGenre('Khác')">Khác</div>
-        </div>
+
         <select id="searchSelect" style="display:none">
           <option value="all">Tất cả</option>
           <option value="title">Tên sách</option>
-          <option value="author">Tác giả</option>
+          <option value="author">Tác giả/NXB</option>
           <option value="genre">Thể loại</option>
         </select>
       </div>
@@ -467,49 +469,49 @@
   <div class="book-grid row">
     <!-- Book 1 -->
     <div class="book-card">
-      <img class="book-cover" src="luat_kinh_te.jpg" alt="Luật Kinh tế" />
+      <img class="book-cover" src="image/luật kinh tế.jpg" alt="Luật Kinh tế" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=luat-kinh-te" data-book-id="luat-kinh-te">Chi tiết</a>
       </div>
     </div>
     <!-- Book 2 -->
     <div class="book-card">
-      <img class="book-cover" src="tu_dien_kinh_te_hoc.jpg" alt="Từ điển Kinh tế học" />
+      <img class="book-cover" src="image/từ điển kinh tế học.jpg" alt="Từ điển Kinh tế học" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=tu-dien-kinh-te" data-book-id="tu-dien-kinh-te">Chi tiết</a>
       </div>
     </div>
     <!-- Book 3 -->
     <div class="book-card">
-      <img class="book-cover" src="nen_kinh_te_tu_do.jpg" alt="Nền Kinh tế tự do" />
+      <img class="book-cover" src="image/nền kinh tế tự do.jpg" alt="Nền Kinh tế tự do" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=nen-kinh-te-tu-do" data-book-id="nen-kinh-te-tu-do">Chi tiết</a>
       </div>
     </div>
     <!-- Book 4 -->
     <div class="book-card">
-      <img class="book-cover" src="cach_nen_kinh_te_van_hanh.jpg" alt="Cách Nền Kinh Tế Vận Hành" />
+      <img class="book-cover" src="image/cách nền kinh tế vận hành.jpg" alt="Cách Nền Kinh Tế Vận Hành" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=cach-nen-kinh-te-van-hanh" data-book-id="cach-nen-kinh-te-van-hanh">Chi tiết</a>
       </div>
     </div>
     <!-- Book 5 -->
     <div class="book-card">
-      <img class="book-cover zoom" src="Marketing_5.0.jpg" alt="Marketing 5.0" />
+      <img class="book-cover zoom" src="image/Marketing 5.0.jpg" alt="Marketing 5.0" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=marketing-5-0" data-book-id="marketing-5-0">Chi tiết</a>
       </div>
     </div>
     <!-- Book 6 -->
     <div class="book-card">
-      <img class="book-cover zoom" src="quan_tri_marketing.jpg" alt="Quản trị Marketing" />
+      <img class="book-cover zoom" src="image/quản trị marketing.jpg" alt="Quản trị Marketing" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=quan-tri-marketing" data-book-id="quan-tri-marketing">Chi tiết</a>
       </div>
     </div>
     <!-- Book 7 -->
     <div class="book-card">
-      <img class="book-cover" src="kinh_te_vi_mo.jpg" alt="Kinh tế Vĩ mô" />
+      <img class="book-cover" src="image/kinh tế vĩ mô.jpg" alt="Kinh tế Vĩ mô" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=kinh-te-vi-mo" data-book-id="kinh-te-vi-mo">Chi tiết</a>
       </div>
@@ -525,49 +527,49 @@
   <div class="book-grid row">
     <!-- Book 1 -->
     <div class="book-card">
-      <img class="book-cover" src="gt_tu_tuong_HCM.jpg" alt="Giáo trình Tư tưởng Hồ Chí Minh" />
+      <img class="book-cover" src="image/gt tử tưởng HCM.jpg" alt="Giáo trình Tư tưởng Hồ Chí Minh" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=tu-tuong-ho-chi-minh" data-book-id="tu-tuong-ho-chi-minh">Chi tiết</a>
       </div>
     </div>
     <!-- Book 2 -->
     <div class="book-card">
-      <img class="book-cover zoom" src="dai_hoc_khoi_nghiep.jpg" alt="Đại học Khởi nghiệp" />
+      <img class="book-cover zoom" src="image/Đại học khởi nghiệp.jpg" alt="Đại học Khởi nghiệp" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=dai-hoc-khoi-nghiep" data-book-id="dai-hoc-khoi-nghiep">Chi tiết</a>
       </div>
     </div>
     <!-- Book 3 -->
     <div class="book-card">
-      <img class="book-cover zoom" src="nhung_cam_ky.jpg" alt="Những Cấm Kị" />
+      <img class="book-cover zoom" src="image/những cấm kỵ.jpg" alt="Những Cấm Kị" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=nhung-cam-ky" data-book-id="nhung-cam-ky">Chi tiết</a>
       </div>
     </div>
     <!-- Book 4 -->
     <div class="book-card">
-      <img class="book-cover" src="tinh_hoa_kinh_te_hoc.jpg" alt="Tinh Hoa Kinh Tế Học" />
+      <img class="book-cover" src="image/tinh hoa kinh tế học.jpg" alt="Tinh Hoa Kinh Tế Học" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=tinh-hoa-kinh-te-hoc" data-book-id="tinh-hoa-kinh-te-hoc">Chi tiết</a>
       </div>
     </div>
     <!-- Book 5 -->
     <div class="book-card">
-      <img class="book-cover" src="gt_LSD.jpg" alt="Lịch sử Đảng" />
+      <img class="book-cover" src="image/gt LSD.jpg" alt="Lịch sử Đảng" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=lich-su-dang" data-book-id="lich-su-dang">Chi tiết</a>
       </div>
     </div>
     <!-- Book 6 -->
     <div class="book-card">
-      <img class="book-cover zoom" src="nguyen_ly_tiep_thi.jpg" alt="Nguyên lý tiếp thị" />
+      <img class="book-cover zoom" src="image/nguyên lý tiếp thị.jpg" alt="Nguyên lý tiếp thị" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=nguyen-ly-tiep-thi" data-book-id="nguyen-ly-tiep-thi">Chi tiết</a>
       </div>
     </div>
     <!-- Book 7 -->
     <div class="book-card">
-      <img class="book-cover" src="doi_mat_tu_ban.jpg" alt="Đối mặt tư bản" />
+      <img class="book-cover" src="image/đối mặt tư bản.jpg" alt="Đối mặt tư bản" />
       <div class="book-info">
         <a class="btn-detail" href="chitiet.html?id=doi-mat-tu-ban" data-book-id="doi-mat-tu-ban">Chi tiết</a>
       </div>
@@ -582,7 +584,7 @@
     <table class="footer-table">
       <tr><td>Địa chỉ:</td><td>Hồ Tùng Mậu, Từ Liêm, Hà Nội, Việt Nam</td></tr>
       <tr><td>Điện thoại:</td><td>(84)24.12.345.678</td></tr>
-      <tr><td>Email:</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c4a8ada6b1aaadb2a1b6b7adb0bd84a3a9a5ada8eaa7aba9">[email&#160;protected]</a></td></tr>
+      <tr><td>Email:</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c8a4a1aabda6a1beadbabba1bcb188afa5a9a1a4e6aba7a5">[email&#160;protected]</a></td></tr>
     </table>
   </div>
   <div class="footer-col">
@@ -743,18 +745,6 @@
       showSearchResults(searchInput.value, searchSelect.value);
     });
 
-    searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        showSearchResults(searchInput.value, searchSelect.value);
-      }
-    });
-
-    searchInput.addEventListener('input', function() {
-      if (searchInput.value.trim() === '') {
-        resetSearchResults();
-      }
-    });
-
     // doSearch: luôn redirect sang timkiem.html
     function doSearch() {
       var q = searchInput.value.trim();
@@ -771,6 +761,49 @@
   })();
 
   // ── Custom filter dropdown ──
+  // Tạo panels trực tiếp trong body để thoát khỏi overflow:hidden của .hero
+  (function createPanels() {
+    function el(tag, attrs, text) {
+      var e = document.createElement(tag);
+      for (var k in attrs) {
+        if (k === 'onclick') e.setAttribute('onclick', attrs[k]);
+        else if (k === 'style') e.style.cssText = attrs[k];
+        else e[k] = attrs[k];
+      }
+      if (text !== undefined) e.textContent = text;
+      return e;
+    }
+
+    // Panel chính
+    var mp = el('div', { className: 'filter-main-panel', id: 'filterMainPanel' });
+
+    var items = [
+      { id: 'fmp-all',    label: 'Tất cả',      check: 'chk-all',    action: "selectFilter('all',event)",    active: true },
+      { id: 'fmp-title',  label: 'Tên sách',    check: 'chk-title',  action: "selectFilter('title',event)",  active: false },
+      { id: 'fmp-genre',  label: 'Thể loại',    check: 'chk-genre',  action: "openGenrePanel(event)",         active: false },
+      { id: 'fmp-author', label: 'Tác giả/ NXB',check: 'chk-author', action: "selectFilter('author',event)", active: false }
+    ];
+    items.forEach(function(item) {
+      var row = el('div', { className: 'fmp-item' + (item.active ? ' active' : ''), id: item.id, onclick: item.action });
+      row.appendChild(el('span', {}, item.label));
+      var chk = el('span', { className: 'fmp-check', id: item.check });
+      chk.textContent = '✓';
+      if (!item.active) chk.style.display = 'none';
+      row.appendChild(chk);
+      mp.appendChild(row);
+    });
+    document.body.appendChild(mp);
+
+    // Panel thể loại con
+    var gp = el('div', { className: 'genre-sub-panel', id: 'genrePanel' });
+    ['Giáo trình','Sách tham khảo','Tài liệu ôn thi','Nghiên cứu khoa học','Sách bài tập','Khác'].forEach(function(name) {
+      var g = el('div', { className: 'genre-item', onclick: "pickGenre('" + name + "')" });
+      g.textContent = name;
+      gp.appendChild(g);
+    });
+    document.body.appendChild(gp);
+  })();
+
   var _currentFilter = 'all';
   function _closeAllPanels() {
     var mp = document.getElementById('filterMainPanel');
@@ -784,13 +817,18 @@
     if (e) e.stopPropagation();
     var mp = document.getElementById('filterMainPanel');
     var fb = document.getElementById('filterBtn');
-    if (!mp) return;
+    if (!mp || !fb) return;
     var isOpen = mp.classList.contains('open');
     _closeAllPanels();
     if (!isOpen) {
-      var rect = fb.getBoundingClientRect();
-      mp.style.top  = (rect.bottom + 4) + 'px';
-      mp.style.left = rect.left + 'px';
+      var r = fb.getBoundingClientRect();
+      var panelW = Math.min(200, window.innerWidth * 0.88);
+      var top  = r.bottom + 4;
+      var left = r.left;
+      if (left + panelW > window.innerWidth - 8) left = Math.max(8, window.innerWidth - panelW - 8);
+      mp.style.top  = top + 'px';
+      mp.style.left = left + 'px';
+      mp.style.minWidth = panelW + 'px';
       mp.classList.add('open');
       fb.classList.add('open');
     }
@@ -816,20 +854,30 @@
   }
   function openGenrePanel(e) {
     if (e) e.stopPropagation();
-    var gp  = document.getElementById('genrePanel');
-    var mp  = document.getElementById('filterMainPanel');
-    var fb  = document.getElementById('filterBtn');
+    var gp = document.getElementById('genrePanel');
+    var mp = document.getElementById('filterMainPanel');
+    var fb = document.getElementById('filterBtn');
     if (!gp) return;
-    // Lấy tọa độ từ filterMainPanel nếu đang hiện, không thì từ filterBtn
     var anchor = (mp && mp.classList.contains('open')) ? mp : fb;
-    var rect = anchor ? anchor.getBoundingClientRect() : {top:60, right:200};
-    gp.style.top  = rect.top + 'px';
-    gp.style.left = (rect.right + 4) + 'px';
+    var r = anchor ? anchor.getBoundingClientRect() : {top:60, right:200, bottom:100, left:0};
+    var pw = Math.min(210, window.innerWidth * 0.88);
+    var top, left;
+    if (r.right + 6 + pw <= window.innerWidth - 4) {
+      top = r.top; left = r.right + 6;        // sang phải
+    } else if (r.left - pw - 6 >= 4) {
+      top = r.top; left = r.left - pw - 6;    // sang trái
+    } else {
+      top = r.bottom + 4;                      // xuống dưới
+      left = Math.max(8, Math.min(r.left, window.innerWidth - pw - 8));
+    }
+    if (top + 300 > window.innerHeight) top = Math.max(4, window.innerHeight - 320);
+    gp.style.top  = top + 'px';
+    gp.style.left = left + 'px';
+    gp.style.minWidth = pw + 'px';
     gp.classList.add('open');
   }
   function pickGenre(name) {
     _currentFilter = 'genre';
-    // Giữ label là "Thể loại", điền tên thể loại vào ô tìm kiếm
     document.getElementById('fbLabel').textContent = 'Thể loại';
     var sel = document.getElementById('searchSelect');
     if (sel) sel.value = 'genre';
@@ -844,10 +892,8 @@
     });
     var fg = document.getElementById('fmp-genre');
     if (fg) fg.classList.add('active');
-    document.querySelectorAll('.genre-item').forEach(function(el) {
-      el.classList.toggle('active', el.textContent.trim() === name);
-    });
     _closeAllPanels();
+    // Chỉ điền vào ô input, người dùng tự nhấn nút tìm kiếm
   }
   document.addEventListener('click', function(e) {
     var wrap = document.getElementById('filterWrap');
@@ -856,6 +902,64 @@
       _closeAllPanels();
     }
   });
+  // ── Reposition panels khi resize (không đóng) ──
+  (function() {
+    var _resizeTimer = null;
+    window.addEventListener('resize', function() {
+      clearTimeout(_resizeTimer);
+      _resizeTimer = setTimeout(function() {
+        var mp = document.getElementById('filterMainPanel');
+        var gp = document.getElementById('genrePanel');
+        var fb = document.getElementById('filterBtn');
+        if (!fb) return;
+        var mpOpen = mp && mp.classList.contains('open');
+        var gpOpen = gp && gp.classList.contains('open');
+        if (!mpOpen && !gpOpen) return; // không có gì đang mở, bỏ qua
+
+        var r = fb.getBoundingClientRect();
+
+        if (mpOpen) {
+          var panelW = Math.min(200, window.innerWidth * 0.88);
+          var top  = r.bottom + 4;
+          var left = r.left;
+          if (left + panelW > window.innerWidth - 8) left = Math.max(8, window.innerWidth - panelW - 8);
+          mp.style.top      = top + 'px';
+          mp.style.left     = left + 'px';
+          mp.style.minWidth = panelW + 'px';
+        }
+
+        if (gpOpen) {
+          var anchor = (mp && mpOpen) ? mp : fb;
+          var ar = anchor.getBoundingClientRect();
+          var pw = Math.min(210, window.innerWidth * 0.88);
+          var gt, gl;
+          if (ar.right + 6 + pw <= window.innerWidth - 4) {
+            gt = ar.top; gl = ar.right + 6;
+          } else if (ar.left - pw - 6 >= 4) {
+            gt = ar.top; gl = ar.left - pw - 6;
+          } else {
+            gt = ar.bottom + 4;
+            gl = Math.max(8, Math.min(ar.left, window.innerWidth - pw - 8));
+          }
+          if (gt + 300 > window.innerHeight) gt = Math.max(4, window.innerHeight - 320);
+          gp.style.top      = gt + 'px';
+          gp.style.left     = gl + 'px';
+          gp.style.minWidth = pw + 'px';
+        }
+      }, 50); // debounce 50ms
+    });
+  })();
+
+  // Đóng dropdown khi scroll
+  window.addEventListener('scroll', function() {
+    var mp = document.getElementById('filterMainPanel');
+    var gp = document.getElementById('genrePanel');
+    if ((mp && mp.classList.contains('open')) || (gp && gp.classList.contains('open'))) {
+      _closeAllPanels();
+    }
+  }, { passive: true });
 </script>
+  <link rel="stylesheet" href="responsive.css" />
+  <script src="nav-mobile.js"></script>
 </body>
 </html>
