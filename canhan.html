@@ -311,6 +311,7 @@
     .has-error .form-input { border-color: #e74c3c; }
     .has-error .field-err { display: block; }
   </style>
+  <link rel="stylesheet" href="responsive.css" />
 </head>
 <body>
 
@@ -401,12 +402,11 @@
         <input type="text" class="form-input" id="f-name" autocomplete="off" placeholder="PHẠM YÊN NHI" readonly oninput="updateSaveButtonState()" />
         <div class="field-err" id="err-name"></div>
       </div>
-
-      <div class="form-row" id="fr-birthday">
+      <div class="form-row" id="fr-dob">
         <label class="form-label">Ngày sinh</label>
-        <input type="date" class="form-input" id="f-birthday" readonly oninput="updateSaveButtonState()" />
+        <input type="date" class="form-input" id="f-dob" readonly onchange="updateSaveButtonState()" />
+        <div class="field-err" id="err-dob"></div>
       </div>
-
       <div class="form-row" id="fr-gender">
         <label class="form-label">Giới tính</label>
         <div style="display:flex;gap:14px;align-items:center;">
@@ -546,9 +546,9 @@
   // Điền thông tin vào form
   document.getElementById('f-email').value       = user.email    || '';
   document.getElementById('f-name').value        = user.name     || '';
-  document.getElementById('f-birthday').value    = user.birthday || '';
   document.getElementById('f-class').value       = user.class    || '';
   document.getElementById('f-phone').value       = user.phone    || '';
+  document.getElementById('f-dob').value = user.dob || '';
 
   var genderVal = user.gender || 'Nam';
 
@@ -625,7 +625,7 @@ document.querySelectorAll('input[name="f-gender"]').forEach(function(r) {
     document.getElementById('edit-actions').style.display = isEditMode ? 'flex' : 'none';
 
     // Toggle editable fields
-    ['f-name','f-email','f-birthday','f-class','f-phone'].forEach(function(id){
+    ['f-name','f-email','f-class','f-phone','f-dob'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.readOnly = !isEditMode;
     });
@@ -736,13 +736,14 @@ document.querySelectorAll('input[name="f-gender"]').forEach(function(r) {
     var email   = document.getElementById('f-email').value.trim();
     var clas    = document.getElementById('f-class').value.trim();
     var phone   = document.getElementById('f-phone').value.trim();
+    var dob = document.getElementById('f-dob').value;
     var gender  = document.querySelector('input[name="f-gender"]:checked');
     var genderVal = gender ? gender.value : 'nam';
     var ok = true;
     var toastMsg = '';
 
     // Clear errors
-    ['fr-name','fr-email','fr-class','fr-phone'].forEach(function(id){
+    ['fr-name','fr-email','fr-class','fr-phone','f-dob'].forEach(function(id){
       document.getElementById(id).classList.remove('has-error');
     });
     ['err-name','err-email','err-class','err-phone'].forEach(function(id){
@@ -816,12 +817,12 @@ document.querySelectorAll('input[name="f-gender"]').forEach(function(r) {
     }
 
     // Save to session
-    user.name     = name;
-    user.email    = email;
-    user.class    = clas;
-    user.phone    = phone;
-    user.gender   = genderVal;
-    user.birthday = document.getElementById('f-birthday').value;
+    user.name    = name;
+    user.email   = email;
+    user.class   = clas;
+    user.phone   = phone;
+    user.dob     = dob; // ✅ THÊM
+    user.gender  = genderVal;
 
     if (passOpen) {
       var newpVal = document.getElementById('f-newpass').value;
@@ -841,11 +842,10 @@ document.querySelectorAll('input[name="f-gender"]').forEach(function(r) {
 
   // ── Cancel ──
   function doCancel() {
-    document.getElementById('f-name').value     = user.name     || '';
-    document.getElementById('f-email').value    = user.email    || '';
-    document.getElementById('f-birthday').value = user.birthday || '';
-    document.getElementById('f-class').value    = user.class    || '';
-    document.getElementById('f-phone').value    = user.phone    || '';
+    document.getElementById('f-name').value    = user.name    || '';
+    document.getElementById('f-email').value   = user.email   || '';
+    document.getElementById('f-class').value   = user.class   || '';
+    document.getElementById('f-phone').value   = user.phone   || '';
     document.querySelectorAll('input[name="f-gender"]').forEach(function(r) {
       r.checked = (r.value === (user.gender || 'Nam'));
     });
@@ -879,6 +879,8 @@ document.querySelectorAll('input[name="f-gender"]').forEach(function(r) {
   }
 
 </script>
-<script src="../backend_docgia/js/update_docgia.js"></script>
+<script src="../backend_docgia/js/dangnhap/update_docgia.js"></script>
+
+  <script src="nav-mobile.js"></script>
 </body>
 </html>
