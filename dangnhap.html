@@ -230,6 +230,7 @@
       80%      { transform: translateX(5px); }
     }
   </style>
+  <link rel="stylesheet" href="responsive.css" />
 </head>
 <body>
 
@@ -269,7 +270,7 @@
     <div class="field" id="field-login-pass">
       <label>Mật khẩu</label>
       <input type="password" id="login-pass" placeholder="" />
-      <div class="err-msg" id="err-login-pass">Vui lòng nhập đầy đủ mật khẩu.</div>
+      <div class="err-msg">Mật khẩu sai vui lòng nhập lại.</div>
     </div>
 
     <div class="row-check">
@@ -425,7 +426,7 @@
       <div class="field" id="field-reg-pass">
         <label>Mật khẩu <span class="req">(*)</span></label>
         <input type="password" id="reg-pass" placeholder="Ít nhất 6 ký tự" />
-        <div class="err-msg">Mật khẩu cần ít nhất 6 ký tự.</div>
+        <div class="err-msg">Mật khẩu cần ít nhất 6 ký tự bao gồm chữ và số.</div>
       </div>
 
       <div class="field" id="field-reg-pass2">
@@ -510,17 +511,9 @@
     var ok = true;
 
     clearErrors();
-    // Reset thông báo lỗi mật khẩu về mặc định
-    var errPass = document.getElementById('err-login-pass');
-    if (errPass) errPass.textContent = 'Vui lòng nhập đầy đủ mật khẩu.';
-
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) { setError('field-login-user'); ok = false; }
-    if (!pass || pass.length < 6) {
-      if (errPass) errPass.textContent = 'Vui lòng nhập đầy đủ mật khẩu.';
-      setError('field-login-pass');
-      ok = false;
-    }
+    if (!pass)                             { setError('field-login-pass'); ok = false; }
     if (!ok) return;
 
     function getStoredUser(key) {
@@ -534,7 +527,6 @@
     var userData;
     if (stored) {
       if (stored.password !== pass) {
-        if (errPass) errPass.textContent = 'Mật khẩu không đúng, vui lòng thử lại.';
         setError('field-login-pass');
         return;
       }
@@ -699,7 +691,6 @@
   function doRegister() {
     clearErrors();
     var name     = document.getElementById('reg-name').value.trim();
-    var birthday = document.getElementById('reg-birthday').value;
     var email    = document.getElementById('reg-email').value.trim();
     var pass     = document.getElementById('reg-pass').value;
     var pass2    = document.getElementById('reg-pass2').value;
@@ -711,7 +702,6 @@
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!name)                              { setError('field-reg-name');     ok = false; }
-    if (!birthday)                          { setError('field-reg-birthday'); ok = false; }
     if (!email || !emailRegex.test(email))  { setError('field-reg-email');    ok = false; }
     if (!pass || pass.length < 6)           { setError('field-reg-pass');     ok = false; }
     if (pass !== pass2)                     { setError('field-reg-pass2');    ok = false; }
@@ -728,7 +718,6 @@
       username: email,
       email:    email,
       name:     name,
-      birthday: birthday,
       contact:  email,
       password: pass,
       code:     'SV' + String(Math.floor(1000 + Math.random()*9000)).substring(0,4),
@@ -741,7 +730,7 @@
     localStorage.setItem('lib_user_' + email, JSON.stringify(registeredUser));
 
     // Reset form
-    ['reg-name','reg-birthday','reg-email','reg-pass','reg-pass2','reg-class','reg-phone'].forEach(function(id){
+    ['reg-name','reg-email','reg-pass','reg-pass2','reg-class','reg-phone'].forEach(function(id){
       document.getElementById(id).value = '';
     });
 
@@ -791,8 +780,6 @@
 <script src="../backend_docgia/js/dangnhap/register.js"></script>
 <script src="../backend_docgia/js/dangnhap/forgot_password.js"></script>
 <script src="../backend_docgia/js/dangnhap/update_docgia.js"></script>
-
-
-
+  <script src="nav-mobile.js"></script>
 </body>
 </html>
