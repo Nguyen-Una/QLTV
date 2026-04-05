@@ -199,15 +199,23 @@
     .rule-card ul li::before { content: attr(data-icon); flex-shrink: 0; }
 
     /* BORROW TABLE */
+    .borrow-table-wrap {
+      width: 100%; overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 24px;
+    }
     .borrow-table {
       width: 100%; border-collapse: collapse;
       background: #fff; border-radius: 14px; overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px;
+      min-width: 480px;
     }
     .borrow-table th {
       background: #1a2a4a; color: #fff;
       padding: 14px 18px; text-align: left;
       font-size: 13px; font-weight: 700; letter-spacing: 0.3px;
+      white-space: nowrap;
     }
     .borrow-table td {
       padding: 13px 18px; font-size: 13.5px; color: #333;
@@ -514,6 +522,7 @@
     <div class="sec-label">Dịch vụ mượn – trả</div>
     <div class="sec-title">Quy định mượn và trả tài liệu</div>
 
+    <div class="borrow-table-wrap">
     <table class="borrow-table">
       <thead>
         <tr>
@@ -544,6 +553,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
 
     <div class="warn-box">
