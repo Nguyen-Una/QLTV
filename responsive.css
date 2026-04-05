@@ -226,6 +226,16 @@ img, video, iframe { max-width: 100%; height: auto; }
   .timeline { padding-left: 24px !important; }
   .facility-grid { grid-template-columns: 1fr !important; }
   .map-embed { height: 240px !important; }
+
+  /* Hướng dẫn – contact grid */
+  .contact-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .contact-card { text-align: left !important; word-break: break-word !important; }
+
+  /* Giới thiệu – facilities grid */
+  .facilities-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .facility-text { min-width: 0 !important; word-break: break-word !important; }
+  .facility-text h4 { font-size: 13.5px !important; }
+  .facility-text p  { font-size: 12.5px !important; }
 }
 
 /* =========================================================
