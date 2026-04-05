@@ -873,7 +873,6 @@
     var mp = document.getElementById('filterMainPanel');
     var fb = document.getElementById('filterBtn');
     if (!gp || !fb) return;
-    // Luôn đóng panel chính trước
     if (mp) mp.classList.remove('open');
     var r  = fb.getBoundingClientRect();
     var pw = Math.min(210, window.innerWidth * 0.88);
@@ -897,6 +896,25 @@
     _closeAllPanels();
     // Chỉ điền vào ô input, người dùng tự nhấn nút tìm kiếm
   }
+
+  // ── Trạng thái đăng nhập ──
+  (function() {
+    var user = null;
+    try { user = JSON.parse(sessionStorage.getItem('lib_user') || 'null'); } catch(e) {}
+    var profileBlock = document.getElementById('profile-block');
+    var loginLink    = document.getElementById('login-link');
+    if (user) {
+      if (profileBlock) profileBlock.style.display = 'inline-flex';
+      if (loginLink)    loginLink.style.display    = 'none';
+      if (user.avatar) {
+        var avatar = document.getElementById('nav-avatar');
+        if (avatar) avatar.innerHTML = '<img src="' + user.avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
+      }
+    } else {
+      if (profileBlock) profileBlock.style.display = 'none';
+      if (loginLink)    loginLink.style.display    = 'inline-flex';
+    }
+  })();
   // ── Đóng khi click/touch ngoài ──
   function _outsideHandler(e) {
     var wrap = document.getElementById('filterWrap');
