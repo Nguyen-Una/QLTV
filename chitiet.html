@@ -637,25 +637,17 @@
     var mp = document.getElementById('filterMainPanel');
     var fb = document.getElementById('filterBtn');
     if (!gp || !fb) return;
-
     // Luôn đóng panel chính trước
     if (mp) mp.classList.remove('open');
-
-    // Tính từ filterBtn (không dùng mp làm anchor vì mp là fixed, tọa độ sai khi zoom)
     var r  = fb.getBoundingClientRect();
     var pw = Math.min(210, window.innerWidth * 0.88);
-    var top, left;
-
-    // Thử sang phải filterBtn
+    var top = r.bottom + 4;
+    var left;
     if (r.right + 6 + pw <= window.innerWidth - 4) {
-      top  = r.bottom + 4;
       left = r.left;
     } else {
-      // Không đủ chỗ bên phải → xuống dưới, căn theo filterBtn
-      top  = r.bottom + 4;
       left = Math.max(8, Math.min(r.left, window.innerWidth - pw - 8));
     }
-
     if (top + 300 > window.innerHeight) top = Math.max(4, window.innerHeight - 320);
     gp.style.top      = top + 'px';
     gp.style.left     = left + 'px';
@@ -669,132 +661,64 @@
     _closeAllPanels();
     // Chỉ điền vào ô input, người dùng tự nhấn nút tìm kiếm
   }
+  // ── Đóng khi click/touch ngoài ──
   function _outsideHandler(e) {
     var wrap = document.getElementById('filterWrap');
     var mp   = document.getElementById('filterMainPanel');
     var gp   = document.getElementById('genrePanel');
     var t    = e.target;
-    var inWrap = wrap && wrap.contains(t);
-    var inMp   = mp   && mp.contains(t);
-    var inGp   = gp   && gp.contains(t);
-    if (!inWrap && !inMp && !inGp) {
+    if (!(wrap && wrap.contains(t)) &&
+        !(mp   && mp.contains(t))   &&
+        !(gp   && gp.contains(t))) {
       _closeAllPanels();
     }
   }
   document.addEventListener('click',      _outsideHandler);
   document.addEventListener('touchstart', _outsideHandler, { passive: true });
-  // ── Reposition panels khi resize (không đóng) ──
+
+  // ── Đóng khi scroll hoặc touchmove (mobile) ──
+  function _scrollCloseHandler() {
+    var mp = document.getElementById('filterMainPanel');
+    var gp = document.getElementById('genrePanel');
+    if ((mp && mp.classList.contains('open')) ||
+        (gp && gp.classList.contains('open'))) {
+      _closeAllPanels();
+    }
+  }
+  window.addEventListener('scroll',    _scrollCloseHandler, { passive: true });
+  window.addEventListener('touchmove', _scrollCloseHandler, { passive: true });
+
+  // ── Reposition khi resize (không đóng) ──
   (function() {
-    var _resizeTimer = null;
+    var _rt = null;
     window.addEventListener('resize', function() {
-      clearTimeout(_resizeTimer);
-      _resizeTimer = setTimeout(function() {
+      clearTimeout(_rt);
+      _rt = setTimeout(function() {
         var mp = document.getElementById('filterMainPanel');
         var gp = document.getElementById('genrePanel');
         var fb = document.getElementById('filterBtn');
         if (!fb) return;
         var mpOpen = mp && mp.classList.contains('open');
         var gpOpen = gp && gp.classList.contains('open');
-        if (!mpOpen && !gpOpen) return; // không có gì đang mở, bỏ qua
-
+        if (!mpOpen && !gpOpen) return;
         var r = fb.getBoundingClientRect();
-
         if (mpOpen) {
-          var panelW = Math.min(200, window.innerWidth * 0.88);
-          var top  = r.bottom + 4;
-          var left = r.left;
-          if (left + panelW > window.innerWidth - 8) left = Math.max(8, window.innerWidth - panelW - 8);
-          mp.style.top      = top + 'px';
-          mp.style.left     = left + 'px';
-          mp.style.minWidth = panelW + 'px';
+          var pw = Math.min(200, window.innerWidth * 0.88);
+          var t  = r.bottom + 4;
+          var l  = r.left;
+          if (l + pw > window.innerWidth - 8) l = Math.max(8, window.innerWidth - pw - 8);
+          mp.style.top = t + 'px'; mp.style.left = l + 'px'; mp.style.minWidth = pw + 'px';
         }
-
         if (gpOpen) {
-          var anchor = (mp && mpOpen) ? mp : fb;
-          var ar = anchor.getBoundingClientRect();
-          var pw = Math.min(210, window.innerWidth * 0.88);
-          var gt, gl;
-          if (ar.right + 6 + pw <= window.innerWidth - 4) {
-            gt = ar.top; gl = ar.right + 6;
-          } else if (ar.left - pw - 6 >= 4) {
-            gt = ar.top; gl = ar.left - pw - 6;
-          } else {
-            gt = ar.bottom + 4;
-            gl = Math.max(8, Math.min(ar.left, window.innerWidth - pw - 8));
-          }
-          if (gt + 300 > window.innerHeight) gt = Math.max(4, window.innerHeight - 320);
-          gp.style.top      = gt + 'px';
-          gp.style.left     = gl + 'px';
-          gp.style.minWidth = pw + 'px';
+          var pw2 = Math.min(210, window.innerWidth * 0.88);
+          var t2  = r.bottom + 4;
+          var l2  = Math.max(8, Math.min(r.left, window.innerWidth - pw2 - 8));
+          if (t2 + 300 > window.innerHeight) t2 = Math.max(4, window.innerHeight - 320);
+          gp.style.top = t2 + 'px'; gp.style.left = l2 + 'px'; gp.style.minWidth = pw2 + 'px';
         }
-      }, 50); // debounce 50ms
+      }, 50);
     });
   })();
-
-  function doSearch() {
-    var q = document.getElementById('searchInput').value.trim();
-    var f = document.getElementById('searchSelect').value || 'all';
-    if (!q) { alert('Vui lòng nhập từ khóa muốn tìm.'); return; }
-    window.location.href = 'timkiem.html?q=' + encodeURIComponent(q) + '&filter=' + encodeURIComponent(f);
-  }
-  document.getElementById('searchInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') doSearch();
-  });
-
-  // Profile dropdown and login-toggle logic
-  function toggleDropdown() {
-    var dd = document.getElementById('user-dropdown');
-    var btn = document.getElementById('nav-user-btn');
-    if (!dd || !btn) return;
-    dd.classList.toggle('show');
-    btn.classList.toggle('open');
-  }
-
-  document.addEventListener('click', function(e) {
-    var btn = document.getElementById('nav-user-btn');
-    var dd  = document.getElementById('user-dropdown');
-    if (!btn || !dd) return;
-    if (!btn.contains(e.target) && !dd.contains(e.target)) {
-      dd.classList.remove('show');
-      btn.classList.remove('open');
-    }
-  });
-
-  function doLogout() {
-    sessionStorage.removeItem('lib_user');
-    localStorage.removeItem('lib_user_remember');
-    window.location.href = 'index.html';
-  }
-
-  (function() {
-    var user = JSON.parse(sessionStorage.getItem('lib_user') || 'null');
-    var profileBlock = document.getElementById('profile-block');
-    var loginLink = document.getElementById('login-link');
-    if (user) {
-      if (profileBlock) profileBlock.style.display = 'inline-flex';
-      if (loginLink) loginLink.style.display = 'none';
-      if (user.avatar) {
-        var avatar = document.getElementById('nav-avatar');
-        if (avatar) {
-          avatar.innerHTML = '<img src="' + user.avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
-        }
-      }
-      var navName = document.getElementById('nav-name');
-      if (navName) navName.textContent = user.name || '';
-    } else {
-      if (profileBlock) profileBlock.style.display = 'none';
-      if (loginLink) loginLink.style.display = 'inline-flex';
-    }
-  })();
-
-  // Đóng dropdown khi scroll
-  window.addEventListener('scroll', function() {
-    var mp = document.getElementById('filterMainPanel');
-    var gp = document.getElementById('genrePanel');
-    if ((mp && mp.classList.contains('open')) || (gp && gp.classList.contains('open'))) {
-      _closeAllPanels();
-    }
-  }, { passive: true });
 </script>
   <script src="nav-mobile.js"></script>
 </body>
