@@ -86,6 +86,8 @@
 
   // ── 4. Toggle ──
   function openMenu() {
+    // Đóng dropdown tìm kiếm nếu đang mở
+    if (typeof _closeAllPanels === 'function') _closeAllPanels();
     hamburger.classList.add('open');
     overlay.classList.add('open');
     mobileMenu.classList.add('open');
