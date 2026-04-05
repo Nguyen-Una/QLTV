@@ -58,14 +58,38 @@
     .filter-btn .fb-label { flex: 1; text-align: left; }
     .filter-btn .fb-chevron { font-size: 10px; color: #3a9ad9; transition: transform .2s; }
     .filter-btn.open .fb-chevron { transform: rotate(180deg); }
-    .filter-main-panel { display: none; position: fixed; background: #fff; border-radius: 10px; min-width: 200px; box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 9999; border: 1px solid #e0eaf4; overflow: hidden; }
-    .filter-main-panel.open { display: block; animation: dropIn .15s ease; }
+    .filter-main-panel {
+      position: fixed;
+      background: #fff; border-radius: 10px; min-width: 200px; max-width: 88vw;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 9999;
+      border: 1px solid #e0eaf4; overflow: hidden;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transform: translateY(-6px) scale(0.97);
+      transition: opacity .18s ease, transform .18s ease, visibility .18s ease,
+                  top .12s ease, left .12s ease;
+    }
+    .filter-main-panel.open {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
     .fmp-item { display: flex; align-items: center; gap: 10px; padding: 11px 16px; font-size: 14px; font-weight: 500; color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap; }
     .fmp-item:hover { background: #eaf4fd; color: #3a9ad9; }
     .fmp-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
     .fmp-item .fmp-check { margin-left: auto; font-size: 13px; color: #3a9ad9; }
-    .genre-sub-panel { display: none; position: fixed; background: #fff; border-radius: 10px; min-width: 210px; box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 10000; border: 1px solid #e0eaf4; overflow: hidden; }
-    .genre-sub-panel.open { display: block; animation: dropIn .15s ease; }
+    .genre-sub-panel {
+      position: fixed;
+      background: #fff; border-radius: 10px; min-width: 210px; max-width: 88vw;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15); z-index: 10000;
+      border: 1px solid #e0eaf4; overflow: hidden;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transform: translateY(-4px) scale(0.97);
+      transition: opacity .18s ease, transform .18s ease, visibility .18s ease,
+                  top .12s ease, left .12s ease;
+    }
+    .genre-sub-panel.open {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
     .genre-item { display: flex; align-items: center; padding: 11px 18px; font-size: 14px; font-weight: 500; color: #1a1a2e; cursor: pointer; transition: background .15s; white-space: nowrap; }
     .genre-item:hover { background: #eaf4fd; color: #3a9ad9; }
     .genre-item.active { background: #eaf4fd; color: #3a9ad9; font-weight: 700; }
@@ -105,6 +129,47 @@
     .social-icon { width: 40px; height: 40px; border-radius: 8px; background: #1a1a2e; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; transition: opacity .2s; }
     .social-icon:hover { opacity: 0.75; }
     .qr-icon { width: 40px; height: 40px; border-radius: 8px; border: 2px solid #1a1a2e; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fff; }
+  
+    /* ── Responsive search bar: mobile ── */
+    @media (max-width: 600px) {
+      .search-top { padding: 12px 0 0 !important; }
+      .search-bar-top { border-radius: 8px !important; }
+
+      .filter-btn {
+        min-width: 0 !important;
+        width: auto !important;
+        padding: 0 10px !important;
+        font-size: 13px !important;
+        gap: 5px !important;
+        flex-shrink: 0 !important;
+      }
+      .filter-btn .fb-label {
+        max-width: 70px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .search-input-top {
+        min-width: 0 !important;
+        padding: 0 8px !important;
+        font-size: 13px !important;
+      }
+
+      .search-btn-top {
+        width: 48px !important;
+        flex-shrink: 0 !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .filter-btn {
+        padding: 0 8px !important;
+        font-size: 12px !important;
+      }
+      .filter-btn .fb-label { max-width: 52px; }
+      .search-btn-top { width: 42px !important; }
+    }
   </style>
   <link rel="stylesheet" href="responsive.css" />
 </head>
@@ -398,11 +463,30 @@
     var gp = document.getElementById('genrePanel');
     var mp = document.getElementById('filterMainPanel');
     var fb = document.getElementById('filterBtn');
-    if (!gp) return;
-    var anchor = (mp && mp.classList.contains('open')) ? mp : fb;
-    var rect = anchor ? anchor.getBoundingClientRect() : {top:60, right:200};
-    gp.style.top  = rect.top + 'px';
-    gp.style.left = (rect.right + 4) + 'px';
+    if (!gp || !fb) return;
+
+    // Luôn đóng panel chính trước
+    if (mp) mp.classList.remove('open');
+
+    // Tính từ filterBtn (không dùng mp làm anchor vì mp là fixed, tọa độ sai khi zoom)
+    var r  = fb.getBoundingClientRect();
+    var pw = Math.min(210, window.innerWidth * 0.88);
+    var top, left;
+
+    // Thử sang phải filterBtn
+    if (r.right + 6 + pw <= window.innerWidth - 4) {
+      top  = r.bottom + 4;
+      left = r.left;
+    } else {
+      // Không đủ chỗ bên phải → xuống dưới, căn theo filterBtn
+      top  = r.bottom + 4;
+      left = Math.max(8, Math.min(r.left, window.innerWidth - pw - 8));
+    }
+
+    if (top + 300 > window.innerHeight) top = Math.max(4, window.innerHeight - 320);
+    gp.style.top      = top + 'px';
+    gp.style.left     = left + 'px';
+    gp.style.minWidth = pw + 'px';
     gp.classList.add('open');
   }
   function pickGenre(name) {
@@ -412,13 +496,20 @@
     _closeAllPanels();
     // Chỉ điền vào ô input, người dùng tự nhấn nút tìm kiếm
   }
-  document.addEventListener('click', function(e) {
+  function _outsideHandler(e) {
     var wrap = document.getElementById('filterWrap');
+    var mp   = document.getElementById('filterMainPanel');
     var gp   = document.getElementById('genrePanel');
-    if (wrap && !wrap.contains(e.target) && gp && !gp.contains(e.target)) {
+    var t    = e.target;
+    var inWrap = wrap && wrap.contains(t);
+    var inMp   = mp   && mp.contains(t);
+    var inGp   = gp   && gp.contains(t);
+    if (!inWrap && !inMp && !inGp) {
       _closeAllPanels();
     }
-  });
+  }
+  document.addEventListener('click',      _outsideHandler);
+  document.addEventListener('touchstart', _outsideHandler, { passive: true });
   // ── Reposition panels khi resize (không đóng) ──
   (function() {
     var _resizeTimer = null;
