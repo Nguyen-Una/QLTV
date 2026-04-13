@@ -488,6 +488,29 @@
     // Chỉ điền vào ô input, người dùng tự nhấn nút tìm kiếm
   }
 
+  // ── Profile dropdown ──
+  function toggleDropdown() {
+    var dd  = document.getElementById('user-dropdown');
+    var btn = document.getElementById('nav-user-btn');
+    if (!dd || !btn) return;
+    dd.classList.toggle('show');
+    btn.classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    var btn = document.getElementById('nav-user-btn');
+    var dd  = document.getElementById('user-dropdown');
+    if (!btn || !dd) return;
+    if (!btn.contains(e.target) && !dd.contains(e.target)) {
+      dd.classList.remove('show');
+      btn.classList.remove('open');
+    }
+  });
+  function doLogout() {
+    sessionStorage.removeItem('lib_user');
+    localStorage.removeItem('lib_user_remember');
+    window.location.href = 'index.html';
+  }
+
   // ── Trạng thái đăng nhập ──
   (function() {
     var user = null;
