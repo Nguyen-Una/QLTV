@@ -285,8 +285,6 @@
       border-bottom: 1px solid #3a9ad9;
     }
 
-
-  
     /* ── Responsive search bar: mobile ── */
     @media (max-width: 600px) {
       .search-top { padding: 12px 0 0 !important; }
@@ -444,7 +442,7 @@
     <table class="footer-table-f">
       <tr><td>Địa chỉ:</td><td>Hồ Tùng Mậu, Từ Liêm, Hà Nội, Việt Nam</td></tr>
       <tr><td>Điện thoại:</td><td>(84)24.12.345.678</td></tr>
-      <tr><td>Email:</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4a2623283f24233c2f3839233e330a2d272b232664292527">[email&#160;protected]</a></td></tr>
+      <tr><td>Email:</td><td>library@university.edu.vn</td></tr>
     </table>
   </div>
   <div class="footer-col">
@@ -487,22 +485,8 @@
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="books.js"></script>
+<script src="books.js"></script>
 <script>
-  // ── Tìm kiếm: redirect sang timkiem.html ──
-  function doSearch() {
-    var q = document.getElementById('searchInput').value.trim();
-    var f = document.getElementById('searchSelect').value || 'all';
-    if (!q) { alert('Vui lòng nhập từ khóa muốn tìm.'); return; }
-    window.location.href = 'timkiem.html?q=' + encodeURIComponent(q) + '&filter=' + encodeURIComponent(f);
-  }
-  document.addEventListener('DOMContentLoaded', function() {
-    var inp = document.getElementById('searchInput');
-    if (inp) inp.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') doSearch();
-    });
-  });
-
   // ── Sync UI filter button từ giá trị ──
   function _syncFilterUI(val) {
     var labels = { all:'Tất cả', title:'Tên sách', author:'Tác giả/ NXB', genre:'Thể loại' };
@@ -519,21 +503,21 @@
       if (el) el.classList.toggle('active', id === 'fmp-' + val);
     });
   }
+
   // Get book ID from URL param
-  const params = new URLSearchParams(window.location.search);
-  const bookId = params.get('id');
-  const fromSearch = params.get('from') === 'search';
-  const backQ = params.get('q') || '';
-  const backFilter = params.get('filter') || 'all';
-  const backUrl = fromSearch
+  var params = new URLSearchParams(window.location.search);
+  var bookId = params.get('id');
+  var fromSearch = params.get('from') === 'search';
+  var backQ = params.get('q') || '';
+  var backFilter = params.get('filter') || 'all';
+  var backUrl = fromSearch
     ? 'timkiem.html?q=' + encodeURIComponent(backQ) + '&filter=' + encodeURIComponent(backFilter)
     : 'index.html';
-  const backLabel = fromSearch ? '← Quay về kết quả tìm kiếm' : '← Quay về trang chủ';
+  var backLabel = fromSearch ? '← Quay về kết quả tìm kiếm' : '← Quay về trang chủ';
 
-  const main = document.getElementById('mainContent');
+  var main = document.getElementById('mainContent');
 
   function renderBook(book) {
-    // Set page title
     document.title = book.title + ' – Library University';
 
     // Pre-fill search bar only if URL contains a query param (search performed)
@@ -542,64 +526,36 @@
     document.getElementById('searchInput').value = querySearch;
     _syncFilterUI(filterSearch);
 
-    const imgHtml = book.image
-      ? `<img src="${book.image}" alt="${book.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="book-cover-placeholder-detail" style="display:none;background:linear-gradient(160deg,#1a2a4a,#2e5090);">${book.title}</div>`
-      : `<div class="book-cover-placeholder-detail" style="background:linear-gradient(160deg,#1a2a4a,#2e5090);">${book.title}</div>`;
+    var imgHtml = book.image
+      ? '<img src="' + book.image + '" alt="' + book.title + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';" /><div class="book-cover-placeholder-detail" style="display:none;background:linear-gradient(160deg,#1a2a4a,#2e5090);">' + book.title + '</div>'
+      : '<div class="book-cover-placeholder-detail" style="background:linear-gradient(160deg,#1a2a4a,#2e5090);">' + book.title + '</div>';
 
-    main.innerHTML = `
-      <div class="detail-title">Thông tin chi tiết: <span>"${book.title}"</span></div>
-      <div class="detail-body">
-        <div class="book-cover-wrap">
-          ${imgHtml}
-          <div class="status-label">Trạng thái: ${book.status}</div>
-        </div>
-        <table class="info-table">
-          <tr>
-            <td class="label">Tên sách</td>
-            <td class="value">${book.title}</td>
-          </tr>
-          <tr>
-            <td class="label">Tác giả</td>
-            <td class="value">${book.author}</td>
-          </tr>
-          <tr>
-            <td class="label">Nhà xuất bản</td>
-            <td class="value">${book.publisher}</td>
-          </tr>
-          <tr>
-            <td class="label">Thể loại</td>
-            <td class="value">${book.type}</td>
-          </tr>
-          <tr>
-            <td class="label">Mô tả</td>
-            <td class="value">${book.desc}</td>
-          </tr>
-          <tr>
-            <td class="label">Tóm tắt</td>
-            <td class="value summary">${book.summary}</td>
-          </tr>
-          <tr>
-            <td class="label">Vị trí</td>
-            <td class="value">
-              <div class="location-value">
-                <span class="location-pin">📍</span>
-                <span>${book.location}</span>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
-    `;
+    main.innerHTML =
+      '<div class="detail-title">Thông tin chi tiết: <span>"' + book.title + '"</span></div>' +
+      '<div class="detail-body">' +
+        '<div class="book-cover-wrap">' +
+          imgHtml +
+          '<div class="status-label">Trạng thái: ' + book.status + '</div>' +
+        '</div>' +
+        '<table class="info-table">' +
+          '<tr><td class="label">Tên sách</td><td class="value">' + book.title + '</td></tr>' +
+          '<tr><td class="label">Tác giả</td><td class="value">' + book.author + '</td></tr>' +
+          '<tr><td class="label">Nhà xuất bản</td><td class="value">' + book.publisher + '</td></tr>' +
+          '<tr><td class="label">Thể loại</td><td class="value">' + book.type + '</td></tr>' +
+          '<tr><td class="label">Mô tả</td><td class="value">' + book.desc + '</td></tr>' +
+          '<tr><td class="label">Tóm tắt</td><td class="value summary">' + book.summary + '</td></tr>' +
+          '<tr><td class="label">Vị trí</td><td class="value"><div class="location-value"><span class="location-pin">📍</span><span>' + book.location + '</span></div></td></tr>' +
+        '</table>' +
+      '</div>';
   }
 
   function renderNotFound() {
-    main.innerHTML = `
-      <div class="not-found">
-        <h2>Không tìm thấy sách</h2>
-        <p>Sách bạn tìm kiếm không tồn tại hoặc đã bị xóa.</p>
-        <a href="${backUrl}" class="back-link">${backLabel}</a>
-      </div>
-    `;
+    main.innerHTML =
+      '<div class="not-found">' +
+        '<h2>Không tìm thấy sách</h2>' +
+        '<p>Sách bạn tìm kiếm không tồn tại hoặc đã bị xóa.</p>' +
+        '<a href="' + backUrl + '" class="back-link">' + backLabel + '</a>' +
+      '</div>';
   }
 
   // Update floating back button
@@ -613,6 +569,19 @@
   } else {
     renderNotFound();
   }
+
+  // ── Hàm tìm kiếm: redirect sang timkiem.html ──
+  function doSearch() {
+    var q = document.getElementById('searchInput').value.trim();
+    var f = document.getElementById('searchSelect').value;
+    if (!q) { alert('Vui lòng nhập từ khóa muốn tìm.'); return; }
+    window.location.href = 'timkiem.html?q=' + encodeURIComponent(q) + '&filter=' + encodeURIComponent(f);
+  }
+
+  // Cho phép nhấn Enter để tìm kiếm
+  document.getElementById('searchInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doSearch();
+  });
 
   // ── Custom filter dropdown ──
   var _currentFilter = 'all';
@@ -672,7 +641,29 @@
     document.getElementById('searchInput').value = name;
     _syncFilterUI('genre');
     _closeAllPanels();
-    // Chỉ điền vào ô input, người dùng tự nhấn nút tìm kiếm
+  }
+
+  // ── Profile dropdown ──
+  function toggleDropdown() {
+    var dd  = document.getElementById('user-dropdown');
+    var btn = document.getElementById('nav-user-btn');
+    if (!dd || !btn) return;
+    dd.classList.toggle('show');
+    btn.classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    var btn = document.getElementById('nav-user-btn');
+    var dd  = document.getElementById('user-dropdown');
+    if (!btn || !dd) return;
+    if (!btn.contains(e.target) && !dd.contains(e.target)) {
+      dd.classList.remove('show');
+      btn.classList.remove('open');
+    }
+  });
+  function doLogout() {
+    sessionStorage.removeItem('lib_user');
+    localStorage.removeItem('lib_user_remember');
+    window.location.href = 'index.html';
   }
 
   // ── Trạng thái đăng nhập ──
@@ -693,6 +684,7 @@
       if (loginLink)    loginLink.style.display    = 'inline-flex';
     }
   })();
+
   // ── Đóng khi click/touch ngoài ──
   function _outsideHandler(e) {
     var wrap = document.getElementById('filterWrap');
